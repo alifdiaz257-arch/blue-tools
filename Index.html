@@ -1,0 +1,3159 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BlueTools</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+--blue:#159cff;
+--blue2:#006dcc;
+--cyan:#71d0ff;
+--bg:#02060b;
+--card:#071522;
+--line:rgba(76,180,255,.14);
+--text:#eef9ff;
+--muted:#6e8799;
+}
+
+body{
+min-height:100vh;
+font-family:Outfit,sans-serif;
+color:var(--text);
+background:
+radial-gradient(circle at 50% -10%,rgba(0,150,255,.2),transparent 40%),
+linear-gradient(#02060b,#000);
+overflow-x:hidden;
+}
+
+body:before{
+content:"";
+position:fixed;
+inset:0;
+z-index:-2;
+background-image:
+linear-gradient(rgba(55,170,255,.045) 1px,transparent 1px),
+linear-gradient(90deg,rgba(55,170,255,.045) 1px,transparent 1px);
+background-size:42px 42px;
+mask-image:linear-gradient(#000,transparent 90%);
+pointer-events:none;
+}
+
+body:after{
+content:"";
+position:fixed;
+inset:0;
+z-index:-1;
+pointer-events:none;
+background:
+linear-gradient(to bottom,transparent 50%,#000),
+linear-gradient(to right,rgba(0,0,0,.65),transparent 25%,transparent 75%,rgba(0,0,0,.65));
+}
+
+header{
+position:sticky;
+top:12px;
+z-index:500;
+width:min(1180px,calc(100% - 24px));
+margin:12px auto;
+padding:10px;
+display:flex;
+align-items:center;
+gap:12px;
+border:1px solid var(--line);
+border-radius:15px;
+background:rgba(3,13,22,.8);
+backdrop-filter:blur(20px);
+box-shadow:0 15px 60px rgba(0,0,0,.45);
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:9px;
+white-space:nowrap;
+}
+
+.logoIcon{
+width:37px;
+height:37px;
+display:grid;
+place-items:center;
+border-radius:10px;
+background:linear-gradient(145deg,#28adff,#07529a);
+box-shadow:0 0 30px rgba(20,150,255,.25);
+}
+
+.logoIcon svg{
+width:20px;
+height:20px;
+fill:none;
+stroke:#fff;
+stroke-width:2;
+}
+
+.logo b{
+font-size:15px;
+}
+
+.logo b span{
+color:#35adff;
+}
+
+.info{
+margin-left:auto;
+display:flex;
+align-items:center;
+gap:12px;
+font-size:9px;
+color:#7e99ab;
+}
+
+.infoItem{
+display:flex;
+align-items:center;
+gap:5px;
+white-space:nowrap;
+}
+
+.infoItem svg{
+width:14px;
+height:14px;
+fill:none;
+stroke:#52baff;
+stroke-width:1.8;
+}
+
+#battery.full{color:#44e993}
+#battery.medium{color:#ffd65b}
+#battery.low{color:#ff6471}
+
+.search{
+width:210px;
+height:35px;
+padding:0 12px;
+outline:0;
+border:1px solid var(--line);
+border-radius:9px;
+background:#06131f;
+color:#fff;
+font:11px Outfit;
+}
+
+.search:focus{
+border-color:#299fff;
+box-shadow:0 0 0 3px rgba(30,150,255,.08);
+}
+
+.account{
+display:none;
+align-items:center;
+gap:7px;
+padding:4px 6px 4px 4px;
+border:1px solid var(--line);
+border-radius:10px;
+background:#06131f;
+}
+
+.account.show{display:flex}
+
+.account img{
+width:27px;
+height:27px;
+border-radius:50%;
+}
+
+.accountName{
+max-width:90px;
+font-size:9px;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
+}
+
+.logout{
+border:0;
+border-radius:6px;
+padding:6px 8px;
+background:#102b41;
+color:#72c7ff;
+font:600 9px Outfit;
+cursor:pointer;
+}
+
+.hero{
+width:min(1000px,calc(100% - 30px));
+margin:105px auto 75px;
+text-align:center;
+}
+
+.badge{
+display:inline-flex;
+align-items:center;
+gap:7px;
+padding:7px 12px;
+border:1px solid rgba(55,170,255,.2);
+border-radius:100px;
+background:rgba(30,140,220,.07);
+color:#73caff;
+font-size:9px;
+margin-bottom:18px;
+}
+
+.badge i{
+width:6px;
+height:6px;
+border-radius:50%;
+background:#48baff;
+box-shadow:0 0 12px #48baff;
+}
+
+.hero h1{
+font-size:clamp(43px,7vw,78px);
+line-height:.95;
+letter-spacing:-4px;
+}
+
+.hero h1 span{
+color:#2eabff;
+text-shadow:0 0 45px rgba(30,160,255,.3);
+}
+
+.hero p{
+max-width:600px;
+margin:20px auto 0;
+color:#6e8799;
+font-size:12px;
+line-height:1.8;
+}
+
+.marquee{
+width:100%;
+overflow:hidden;
+margin-bottom:80px;
+border-top:1px solid var(--line);
+border-bottom:1px solid var(--line);
+mask-image:linear-gradient(to right,transparent,black 12%,black 88%,transparent);
+}
+
+.marqueeTrack{
+width:max-content;
+display:flex;
+animation:marquee 48s linear infinite;
+}
+
+.marqueeTrack span{
+padding-right:60px;
+font-size:clamp(50px,7vw,95px);
+font-weight:800;
+letter-spacing:-5px;
+white-space:nowrap;
+color:transparent;
+-webkit-text-stroke:1px rgba(80,180,255,.12);
+}
+
+@keyframes marquee{
+to{transform:translateX(-50%)}
+}
+
+main{
+width:min(1180px,calc(100% - 24px));
+margin:auto;
+}
+
+.category{
+margin-bottom:70px;
+}
+
+.categoryHead{
+display:flex;
+justify-content:space-between;
+align-items:end;
+margin-bottom:15px;
+}
+
+.categoryHead h2{
+font-size:20px;
+letter-spacing:-.5px;
+}
+
+.categoryHead p{
+margin-top:4px;
+font-size:9px;
+color:#526b7d;
+}
+
+.count{
+font-size:9px;
+color:#4b8db7;
+}
+
+.tools{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:9px;
+}
+
+.tool{
+position:relative;
+overflow:hidden;
+min-height:115px;
+padding:16px;
+text-align:left;
+border:1px solid var(--line);
+border-radius:13px;
+background:linear-gradient(145deg,rgba(9,32,50,.95),rgba(3,9,15,.96));
+color:#fff;
+cursor:pointer;
+transition:.28s;
+}
+
+.tool:before{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(110deg,transparent,rgba(60,180,255,.09),transparent);
+transform:translateX(-110%);
+transition:.8s;
+}
+
+.tool:hover{
+transform:translateY(-5px);
+border-color:rgba(65,180,255,.42);
+box-shadow:0 18px 45px rgba(0,100,180,.18);
+}
+
+.tool:hover:before{
+transform:translateX(110%);
+}
+
+.icon{
+width:32px;
+height:32px;
+display:grid;
+place-items:center;
+margin-bottom:12px;
+border:1px solid rgba(70,180,255,.14);
+border-radius:8px;
+background:rgba(35,155,255,.1);
+}
+
+.icon svg{
+width:17px;
+height:17px;
+fill:none;
+stroke:#5bc0ff;
+stroke-width:1.8;
+}
+
+.tool h3{
+font-size:12px;
+margin-bottom:4px;
+}
+
+.tool p{
+font-size:9px;
+line-height:1.45;
+color:#607a8c;
+}
+
+footer{
+padding:70px 20px 40px;
+text-align:center;
+color:#3e586b;
+font-size:9px;
+}
+
+/* REVEAL */
+.reveal{
+opacity:0;
+transform:translateY(35px);
+transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1);
+}
+
+.reveal.show{
+opacity:1;
+transform:none;
+}
+
+/* LOGIN */
+.overlay{
+position:fixed;
+inset:0;
+z-index:9000;
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+background:rgba(0,0,0,.78);
+backdrop-filter:blur(18px);
+}
+
+.overlay.active{
+display:flex;
+animation:fade .25s ease;
+}
+
+@keyframes fade{
+from{opacity:0}
+to{opacity:1}
+}
+
+.login{
+position:relative;
+width:min(390px,100%);
+padding:35px 26px;
+text-align:center;
+border:1px solid rgba(55,175,255,.3);
+border-radius:20px;
+background:
+radial-gradient(circle at 50% 0,rgba(30,160,255,.18),transparent 55%),
+#050d15;
+box-shadow:0 30px 100px #000,0 0 70px rgba(0,130,255,.13);
+animation:open .35s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes open{
+from{opacity:0;transform:scale(.92) translateY(20px)}
+to{opacity:1;transform:none}
+}
+
+.loginLogo{
+width:55px;
+height:55px;
+display:grid;
+place-items:center;
+margin:auto auto 17px;
+border-radius:15px;
+background:linear-gradient(145deg,#29aaff,#0759a8);
+box-shadow:0 0 35px rgba(30,160,255,.25);
+}
+
+.loginLogo svg{
+width:27px;
+fill:none;
+stroke:#fff;
+stroke-width:2;
+}
+
+.login h2{
+font-size:24px;
+letter-spacing:-1px;
+}
+
+.login p{
+max-width:290px;
+margin:9px auto 23px;
+color:#698398;
+font-size:11px;
+line-height:1.7;
+}
+
+.close{
+position:absolute;
+right:12px;
+top:11px;
+width:30px;
+height:30px;
+border:0;
+border-radius:8px;
+background:transparent;
+color:#7891a2;
+font-size:20px;
+cursor:pointer;
+}
+
+.close:hover{
+background:#12354e;
+color:white;
+}
+
+#googleButton{
+display:flex;
+justify-content:center;
+min-height:44px;
+}
+
+.login small{
+display:block;
+margin-top:17px;
+color:#385267;
+font-size:8px;
+}
+
+/* TOOL POPUP */
+.toolOverlay{
+position:fixed;
+inset:0;
+z-index:8500;
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+background:rgba(0,0,0,.7);
+backdrop-filter:blur(15px);
+}
+
+.toolOverlay.active{
+display:flex;
+}
+
+.browser{
+width:min(720px,100%);
+height:min(570px,90vh);
+display:flex;
+flex-direction:column;
+overflow:hidden;
+border:1px solid rgba(65,180,255,.35);
+border-radius:14px;
+background:#030a11;
+box-shadow:0 30px 110px #000,0 0 70px rgba(0,130,255,.14);
+animation:open .3s ease;
+}
+
+.tabs{
+height:42px;
+display:flex;
+align-items:end;
+justify-content:space-between;
+padding-left:14px;
+background:#071726;
+border-bottom:1px solid rgba(70,170,255,.12);
+}
+
+.tab{
+height:35px;
+width:200px;
+padding:5px 9px;
+display:flex;
+align-items:center;
+gap:8px;
+border-radius:8px 8px 0 0;
+background:#0d2b45;
+}
+
+.tab svg{
+width:14px;
+fill:#58bdff;
+}
+
+.tab span{
+font-size:10px;
+overflow:hidden;
+white-space:nowrap;
+text-overflow:ellipsis;
+}
+
+.tab button{
+margin-left:auto;
+border:0;
+background:none;
+color:#8da6b7;
+font-size:18px;
+cursor:pointer;
+}
+
+.windows{
+display:flex;
+}
+
+.windows button{
+width:38px;
+height:30px;
+border:0;
+background:transparent;
+color:#91aabc;
+cursor:pointer;
+}
+
+.windows button:hover{
+background:#143952;
+color:white;
+}
+
+.windows .x:hover{
+background:#ed3d4c;
+}
+
+.browserHead{
+height:48px;
+display:flex;
+align-items:center;
+gap:5px;
+padding:7px 9px;
+background:#0a2237;
+}
+
+.nav{
+width:30px;
+height:30px;
+border:0;
+border-radius:7px;
+background:transparent;
+color:#8da6b7;
+cursor:pointer;
+}
+
+.nav:hover{
+background:#123951;
+color:white;
+}
+
+.address{
+position:relative;
+flex:1;
+}
+
+.address input{
+width:100%;
+height:32px;
+padding:0 14px 0 34px;
+border:1px solid rgba(70,170,255,.13);
+border-radius:20px;
+outline:0;
+background:#061521;
+color:#eaf8ff;
+font:10px Outfit;
+}
+
+.address svg{
+position:absolute;
+left:12px;
+top:9px;
+width:14px;
+height:14px;
+fill:none;
+stroke:#5dbfff;
+stroke-width:2;
+}
+
+.content{
+flex:1;
+overflow:auto;
+padding:27px;
+background:linear-gradient(#09223855,#02070c);
+}
+
+.content::-webkit-scrollbar{
+width:5px;
+}
+
+.content::-webkit-scrollbar-thumb{
+background:#145b89;
+border-radius:20px;
+}
+
+.toolTitle{
+display:flex;
+align-items:center;
+gap:13px;
+margin-bottom:20px;
+}
+
+.toolBigIcon{
+width:46px;
+height:46px;
+display:grid;
+place-items:center;
+border-radius:12px;
+background:rgba(40,160,255,.1);
+border:1px solid rgba(60,180,255,.2);
+}
+
+.toolBigIcon svg{
+width:22px;
+fill:none;
+stroke:#60c0ff;
+stroke-width:2;
+}
+
+.toolTitle h2{
+font-size:21px;
+}
+
+.toolTitle p{
+margin-top:3px;
+font-size:9px;
+color:#648095;
+}
+
+.input,
+.textarea{
+width:100%;
+padding:13px;
+margin-bottom:9px;
+border:1px solid rgba(70,170,255,.14);
+border-radius:9px;
+outline:0;
+background:#061521;
+color:white;
+font:11px Outfit;
+}
+
+.textarea{
+min-height:140px;
+resize:vertical;
+}
+
+.input:focus,
+.textarea:focus{
+border-color:#299fff;
+box-shadow:0 0 0 3px rgba(30,150,255,.08);
+}
+
+.action{
+width:100%;
+min-height:40px;
+border:1px solid rgba(100,195,255,.25);
+border-radius:9px;
+background:linear-gradient(135deg,#299fff,#0968c8);
+color:white;
+font:700 10px Outfit;
+cursor:pointer;
+transition:.25s;
+}
+
+.action:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 30px rgba(20,135,255,.25);
+}
+
+.result{
+min-height:50px;
+padding:14px;
+margin-top:10px;
+border:1px solid rgba(75,170,255,.12);
+border-radius:9px;
+background:#061521;
+color:#83ceff;
+font-size:11px;
+white-space:pre-wrap;
+word-break:break-word;
+}
+
+.bigResult{
+padding:25px;
+text-align:center;
+font-size:27px;
+font-weight:700;
+}
+
+@media(max-width:900px){
+.tools{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:700px){
+.tools{grid-template-columns:repeat(2,1fr)}
+.infoItem:nth-child(2),
+.infoItem:nth-child(3){display:none}
+.search{width:160px}
+}
+
+@media(max-width:520px){
+header{flex-wrap:wrap}
+.search{width:100%;order:10}
+.info{margin-left:auto}
+.tools{grid-template-columns:1fr 1fr}
+.tool{min-height:108px;padding:13px}
+.hero{margin-top:75px}
+.hero h1{letter-spacing:-2px}
+.content{padding:19px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+<div class="logoIcon">
+<svg viewBox="0 0 24 24">
+<path d="M13 2 3 14h8l-1 8 11-14h-8z"/>
+</svg>
+</div>
+<b>Blue<span>Tools</span></b>
+</div>
+
+<div class="info">
+
+<div class="infoItem">
+<svg viewBox="0 0 24 24">
+<rect x="3" y="7" width="17" height="10" rx="2"/>
+<path d="M21 10v4"/>
+</svg>
+<span id="battery">--%</span>
+</div>
+
+<div class="infoItem">
+<svg viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"/>
+<path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>
+</svg>
+<span>ID</span>
+</div>
+
+<div class="infoItem">
+<svg viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"/>
+<path d="M12 7v5l3 2"/>
+</svg>
+<span id="clock">00:00:00</span>
+</div>
+
+</div>
+
+<div class="account" id="account">
+<img id="photo">
+<span class="accountName" id="accountName"></span>
+<button class="logout" onclick="logout()">Logout</button>
+</div>
+
+<input
+class="search"
+id="search"
+placeholder="Search tools..."
+oninput="searchTools()"
+>
+
+</header>
+
+
+<section class="hero reveal">
+
+<div class="badge">
+<i></i>
+BLUE UTILITY SYSTEM
+</div>
+
+<h1>
+Everything you need.<br>
+<span>In one place.</span>
+</h1>
+
+<p>
+Tools sederhana untuk coding, produktivitas,
+teks, developer dan kebutuhan digital lainnya.
+</p>
+
+</section>
+
+
+<div class="marquee">
+<div class="marqueeTrack">
+<span>CALCULATE • CODE • CONVERT • CREATE • CHECK • ORGANIZE •</span>
+<span>CALCULATE • CODE • CONVERT • CREATE • CHECK • ORGANIZE •</span>
+</div>
+</div>
+
+
+<main id="toolList"></main>
+
+<footer>
+BlueTools • Utility tools for everyday work.
+</footer>
+
+
+<!-- LOGIN POPUP -->
+
+<div class="overlay" id="loginOverlay">
+
+<div class="login">
+
+<button class="close" onclick="closeLogin()">×</button>
+
+<div class="loginLogo">
+<svg viewBox="0 0 24 24">
+<path d="M13 2 3 14h8l-1 8 11-14h-8z"/>
+</svg>
+</div>
+
+<h2>Login Required</h2>
+
+<p>
+Silakan login dengan Google terlebih dahulu
+untuk menggunakan tools ini.
+</p>
+
+<div id="googleButton"></div>
+
+<small>Secure authentication with Google</small>
+
+</div>
+
+</div>
+
+
+<!-- TOOL POPUP -->
+
+<div class="toolOverlay" id="toolOverlay">
+
+<div class="browser">
+
+<div class="tabs">
+
+<div class="tab">
+
+<svg viewBox="0 0 24 24">
+<path d="M13 2 3 14h8l-1 8 11-14h-8z"/>
+</svg>
+
+<span id="tabTitle">BlueTools</span>
+
+<button onclick="closeTool()">×</button>
+
+</div>
+
+<div class="windows">
+<button>−</button>
+<button>□</button>
+<button class="x" onclick="closeTool()">×</button>
+</div>
+
+</div>
+
+<div class="browserHead">
+
+<button class="nav">←</button>
+<button class="nav">→</button>
+
+<div class="address">
+
+<svg viewBox="0 0 24 24">
+<circle cx="12" cy="12" r="9"/>
+<path d="M12 7v5l3 2"/>
+</svg>
+
+<input
+id="popupSearch"
+placeholder="Search tools..."
+oninput="searchPopup()"
+>
+
+</div>
+
+<button class="nav">⋮</button>
+
+</div>
+
+<div class="content">
+
+<div class="toolTitle">
+
+<div class="toolBigIcon">
+<svg viewBox="0 0 24 24">
+<path d="M13 2 3 14h8l-1 8 11-14h-8z"/>
+</svg>
+</div>
+
+<div>
+<h2 id="popupName">Tool</h2>
+<p id="popupDesc"></p>
+</div>
+
+</div>
+
+<div id="toolBody"></div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<script>
+
+/* ==========================================
+   GOOGLE CLIENT ID
+========================================== */
+
+const GOOGLE_CLIENT_ID =
+"1060030753845-li37pu6d85u833ui8b90jsrnv2vejfv4.apps.googleusercontent.com";
+
+
+/* ==========================================
+   LOGIN STATE
+========================================== */
+
+let loggedIn =
+localStorage.getItem("blue_logged") === "true";
+
+let pendingTool = null;
+
+let googleInitialized = false;
+
+
+/* ==========================================
+   TOOL DATA
+========================================== */
+
+const tools = [
+
+{
+cat:"Produktivitas",
+name:"Kalkulator",
+desc:"Hitung operasi matematika dengan cepat.",
+type:"calculator"
+},
+
+{
+cat:"Produktivitas",
+name:"Persentase",
+desc:"Hitung persentase dari sebuah nilai.",
+type:"percent"
+},
+
+{
+cat:"Produktivitas",
+name:"Diskon",
+desc:"Hitung harga setelah diskon.",
+type:"discount"
+},
+
+{
+cat:"Produktivitas",
+name:"Umur",
+desc:"Hitung umur berdasarkan tanggal lahir.",
+type:"age"
+},
+
+{
+cat:"Produktivitas",
+name:"Tanggal",
+desc:"Lihat tanggal hari ini.",
+type:"date"
+},
+
+{
+cat:"Produktivitas",
+name:"Countdown",
+desc:"Hitung mundur menuju waktu tertentu.",
+type:"countdown"
+},
+
+{
+cat:"Produktivitas",
+name:"Stopwatch",
+desc:"Pengukur waktu sederhana.",
+type:"stopwatch"
+},
+
+{
+cat:"Teks",
+name:"Word Counter",
+desc:"Hitung kata, karakter dan baris.",
+type:"words"
+},
+
+{
+cat:"Teks",
+name:"Case Converter",
+desc:"Ubah teks menjadi uppercase atau lowercase.",
+type:"case"
+},
+
+{
+cat:"Teks",
+name:"Text Reverse",
+desc:"Balik susunan karakter teks.",
+type:"reverse"
+},
+
+{
+cat:"Teks",
+name:"Remove Spaces",
+desc:"Bersihkan spasi berlebihan.",
+type:"spaces"
+},
+
+{
+cat:"Teks",
+name:"Line Counter",
+desc:"Hitung jumlah baris teks.",
+type:"lines"
+},
+
+{
+cat:"Teks",
+name:"Slug Generator",
+desc:"Buat slug URL dari teks.",
+type:"slug"
+},
+
+{
+cat:"Teks",
+name:"Text Sorter",
+desc:"Urutkan teks berdasarkan baris.",
+type:"sort"
+},
+
+{
+cat:"Teks",
+name:"Duplicate Remover",
+desc:"Hapus baris yang sama.",
+type:"duplicate"
+},
+
+{
+cat:"Developer",
+name:"JSON Formatter",
+desc:"Rapikan JSON agar mudah dibaca.",
+type:"json"
+},
+
+{
+cat:"Developer",
+name:"JSON Minifier",
+desc:"Minimalkan ukuran JSON.",
+type:"jsonmini"
+},
+
+{
+cat:"Developer",
+name:"Base64 Encoder",
+desc:"Encode teks menjadi Base64.",
+type:"b64encode"
+},
+
+{
+cat:"Developer",
+name:"Base64 Decoder",
+desc:"Decode Base64 menjadi teks.",
+type:"b64decode"
+},
+
+{
+cat:"Developer",
+name:"URL Encoder",
+desc:"Encode karakter URL.",
+type:"urlencode"
+},
+
+{
+cat:"Developer",
+name:"URL Decoder",
+desc:"Decode URL encoded text.",
+type:"urldecode"
+},
+
+{
+cat:"Developer",
+name:"UUID Generator",
+desc:"Generate UUID secara random.",
+type:"uuid"
+},
+
+{
+cat:"Developer",
+name:"Password Generator",
+desc:"Generate password random.",
+type:"password"
+},
+
+{
+cat:"Developer",
+name:"SHA-256",
+desc:"Generate SHA-256 hash.",
+type:"hash"
+},
+
+{
+cat:"Developer",
+name:"HTML Escape",
+desc:"Escape karakter HTML.",
+type:"escape"
+},
+
+{
+cat:"Developer",
+name:"HTML Preview",
+desc:"Preview kode HTML.",
+type:"html"
+},
+
+{
+cat:"Developer",
+name:"HEX → RGB",
+desc:"Konversi warna HEX menjadi RGB.",
+type:"hex"
+},
+
+{
+cat:"Utility",
+name:"Random Number",
+desc:"Generate angka random.",
+type:"random"
+},
+
+{
+cat:"Utility",
+name:"Random Color",
+desc:"Generate warna HEX random.",
+type:"randomcolor"
+},
+
+{
+cat:"Utility",
+name:"Binary Converter",
+desc:"Konversi teks dan binary.",
+type:"binary"
+},
+
+{
+cat:"Utility",
+name:"Morse Converter",
+desc:"Konversi teks menjadi Morse.",
+type:"morse"
+},
+
+{
+cat:"Utility",
+name:"Lorem Ipsum",
+desc:"Generate teks dummy.",
+type:"lorem"
+},
+
+{
+cat:"Utility",
+name:"Timestamp",
+desc:"Lihat Unix timestamp.",
+type:"timestamp"
+},
+
+{
+cat:"Utility",
+name:"Aspect Ratio",
+desc:"Hitung rasio ukuran.",
+type:"ratio"
+},
+
+{
+cat:"Utility",
+name:"Color Picker",
+desc:"Pilih warna dari browser.",
+type:"picker"
+},
+
+{
+cat:"Network",
+name:"Public IP",
+desc:"Lihat alamat IP publik.",
+type:"ip"
+},
+
+{
+cat:"Network",
+name:"User Agent",
+desc:"Lihat informasi browser.",
+type:"ua"
+},
+
+{
+cat:"Network",
+name:"URL Parser",
+desc:"Analisis bagian sebuah URL.",
+type:"urlparse"
+}
+
+];
+
+
+/* ==========================================
+   ICON
+========================================== */
+
+const icon = `
+<svg viewBox="0 0 24 24">
+<path d="M13 2 3 14h8l-1 8 11-14h-8z"/>
+</svg>
+`;
+
+
+/* ==========================================
+   RENDER TOOLS
+========================================== */
+
+function renderTools(){
+
+const groups={};
+
+tools.forEach(tool=>{
+
+if(!groups[tool.cat])
+groups[tool.cat]=[];
+
+groups[tool.cat].push(tool);
+
+});
+
+const root=document.getElementById("toolList");
+
+root.innerHTML="";
+
+Object.entries(groups).forEach(([category,list])=>{
+
+const section=document.createElement("section");
+
+section.className="category reveal";
+
+section.innerHTML=`
+
+<div class="categoryHead">
+
+<div>
+<h2>${category}</h2>
+<p>Tools ${category.toLowerCase()}.</p>
+</div>
+
+<span class="count">
+${list.length} TOOLS
+</span>
+
+</div>
+
+<div class="tools">
+
+${list.map((tool,index)=>`
+
+<button
+class="tool"
+data-search="${(
+tool.name+" "+tool.desc+" "+tool.cat
+).toLowerCase()}"
+onclick="requestTool(${tools.indexOf(tool)})"
+>
+
+<div class="icon">
+${icon}
+</div>
+
+<h3>${tool.name}</h3>
+
+<p>${tool.desc}</p>
+
+</button>
+
+`).join("")}
+
+</div>
+`;
+
+root.appendChild(section);
+
+});
+
+observeReveal();
+
+}
+
+
+/* ==========================================
+   TOOL CLICK
+========================================== */
+
+function requestTool(index){
+
+const tool=tools[index];
+
+if(!loggedIn){
+
+pendingTool=tool;
+
+openLogin();
+
+return;
+
+}
+
+openTool(tool);
+
+}
+
+
+/* ==========================================
+   LOGIN
+========================================== */
+
+function openLogin(){
+
+document
+.getElementById("loginOverlay")
+.classList.add("active");
+
+initGoogle();
+
+}
+
+
+function closeLogin(){
+
+document
+.getElementById("loginOverlay")
+.classList.remove("active");
+
+pendingTool=null;
+
+}
+
+
+function initGoogle(){
+
+if(googleInitialized)return;
+
+if(typeof google==="undefined"){
+
+setTimeout(initGoogle,300);
+
+return;
+
+}
+
+if(
+GOOGLE_CLIENT_ID.includes("ISI_CLIENT_ID")
+){
+
+document.getElementById("googleButton").innerHTML=`
+
+<div style="
+padding:12px;
+border:1px solid rgba(255,190,70,.2);
+border-radius:9px;
+background:rgba(255,180,50,.05);
+color:#d9b86a;
+font-size:9px;
+line-height:1.6
+">
+Masukkan Google Client ID terlebih dahulu.
+</div>
+`;
+
+return;
+
+}
+
+google.accounts.id.initialize({
+
+client_id:GOOGLE_CLIENT_ID,
+
+callback:googleLogin
+
+});
+
+google.accounts.id.renderButton(
+
+document.getElementById("googleButton"),
+
+{
+theme:"outline",
+size:"large",
+type:"standard",
+text:"signin_with",
+shape:"rectangular",
+width:280
+}
+
+);
+
+googleInitialized=true;
+
+}
+
+
+/* ==========================================
+   GOOGLE LOGIN CALLBACK
+========================================== */
+
+function googleLogin(response){
+
+if(!response?.credential){
+
+alert("Login Google gagal.");
+
+return;
+
+}
+
+const data=decodeJWT(
+response.credential
+);
+
+if(!data){
+
+alert("Credential Google tidak valid.");
+
+return;
+
+}
+
+localStorage.setItem(
+"blue_logged",
+"true"
+);
+
+localStorage.setItem(
+"blue_name",
+data.name || "Google User"
+);
+
+localStorage.setItem(
+"blue_email",
+data.email || ""
+);
+
+localStorage.setItem(
+"blue_photo",
+data.picture || ""
+);
+
+loggedIn=true;
+
+updateAccount();
+
+document
+.getElementById("loginOverlay")
+.classList.remove("active");
+
+
+/*
+  TOOL YANG TADI DIKLIK
+  LANGSUNG DIBUKA
+*/
+
+if(pendingTool){
+
+const tool=pendingTool;
+
+pendingTool=null;
+
+openTool(tool);
+
+}
+
+}
+
+
+/* ==========================================
+   JWT
+========================================== */
+
+function decodeJWT(token){
+
+try{
+
+const part=token.split(".")[1];
+
+const base64=
+part.replace(/-/g,"+")
+.replace(/_/g,"/");
+
+const json=
+decodeURIComponent(
+atob(base64)
+.split("")
+.map(char=>
+"%"+
+("00"+
+char.charCodeAt(0).toString(16))
+.slice(-2)
+)
+.join("")
+);
+
+return JSON.parse(json);
+
+}catch{
+
+return null;
+
+}
+
+}
+
+
+/* ==========================================
+   ACCOUNT
+========================================== */
+
+function updateAccount(){
+
+const account=
+document.getElementById("account");
+
+if(!loggedIn){
+
+account.classList.remove("show");
+
+return;
+
+}
+
+const name=
+localStorage.getItem("blue_name")
+||"Google User";
+
+const photo=
+localStorage.getItem("blue_photo")
+||"";
+
+document.getElementById("accountName")
+.textContent=name;
+
+document.getElementById("photo")
+.src=photo;
+
+account.classList.add("show");
+
+}
+
+updateAccount();
+
+
+/* ==========================================
+   LOGOUT
+========================================== */
+
+function logout(){
+
+localStorage.removeItem("blue_logged");
+localStorage.removeItem("blue_name");
+localStorage.removeItem("blue_email");
+localStorage.removeItem("blue_photo");
+
+loggedIn=false;
+
+if(
+window.google &&
+google.accounts &&
+google.accounts.id
+){
+
+google.accounts.id.disableAutoSelect();
+
+}
+
+updateAccount();
+
+}
+
+
+/* ==========================================
+   OPEN TOOL
+========================================== */
+
+function openTool(tool){
+
+document
+.getElementById("toolOverlay")
+.classList.add("active");
+
+document.getElementById("tabTitle")
+.textContent=tool.name+" • BlueTools";
+
+document.getElementById("popupName")
+.textContent=tool.name;
+
+document.getElementById("popupDesc")
+.textContent=tool.desc;
+
+document.getElementById("popupSearch")
+.value=tool.name;
+
+renderTool(tool.type);
+
+}
+
+
+/* ==========================================
+   SEARCH
+========================================== */
+
+function searchTools(){
+
+const q=
+document.getElementById("search")
+.value
+.toLowerCase()
+.trim();
+
+document
+.querySelectorAll(".tool")
+.forEach(tool=>{
+
+tool.style.display=
+!q ||
+tool.dataset.search.includes(q)
+?""
+:"none";
+
+});
+
+document
+.querySelectorAll(".category")
+.forEach(category=>{
+
+const visible=
+[...category.querySelectorAll(".tool")]
+.some(x=>x.style.display!=="none");
+
+category.style.display=
+visible?"":"none";
+
+});
+
+}
+
+
+function searchPopup(){
+
+const q=
+document.getElementById("popupSearch")
+.value
+.toLowerCase()
+.trim();
+
+if(!q)return;
+
+const found=
+tools.find(tool=>
+tool.name.toLowerCase().includes(q)
+);
+
+if(found){
+
+document.getElementById("popupName")
+.textContent=found.name;
+
+document.getElementById("popupDesc")
+.textContent=found.desc;
+
+renderTool(found.type);
+
+}
+
+}
+
+
+/* ==========================================
+   TOOL UI
+========================================== */
+
+function renderTool(type){
+
+const box=
+document.getElementById("toolBody");
+
+let html="";
+
+const text=`
+<textarea
+id="input"
+class="textarea"
+placeholder="Masukkan teks..."
+></textarea>
+`;
+
+switch(type){
+
+case"calculator":
+
+html=`
+<input id="input" class="input"
+placeholder="Contoh: (20 + 5) * 2">
+
+<button class="action" onclick="calculate()">
+Hitung
+</button>
+
+<div class="result bigResult" id="result">0</div>
+`;
+
+break;
+
+
+case"percent":
+
+html=`
+<input id="a" class="input" placeholder="Nilai">
+<input id="b" class="input" placeholder="Total">
+
+<button class="action" onclick="percent()">
+Hitung Persentase
+</button>
+
+<div class="result bigResult" id="result">0%</div>
+`;
+
+break;
+
+
+case"discount":
+
+html=`
+<input id="price" class="input" placeholder="Harga">
+<input id="disc" class="input" placeholder="Diskon %">
+
+<button class="action" onclick="discount()">
+Hitung
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"age":
+
+html=`
+<input id="birth" type="date" class="input">
+
+<button class="action" onclick="calculateAge()">
+Hitung Umur
+</button>
+
+<div class="result bigResult" id="result"></div>
+`;
+
+break;
+
+
+case"date":
+
+html=`
+<div class="result bigResult">
+${new Date().toLocaleDateString("id-ID",{
+weekday:"long",
+day:"numeric",
+month:"long",
+year:"numeric"
+})}
+</div>
+`;
+
+break;
+
+
+case"countdown":
+
+html=`
+<input id="countDate" type="datetime-local" class="input">
+
+<button class="action" onclick="startCountdown()">
+Start Countdown
+</button>
+
+<div class="result bigResult" id="result">
+00:00:00
+</div>
+`;
+
+break;
+
+
+case"stopwatch":
+
+html=`
+<div class="result bigResult" id="result">
+00:00:00
+</div>
+
+<button class="action" onclick="startStopwatch()">
+Start
+</button>
+
+<br><br>
+
+<button class="action" onclick="stopStopwatch()">
+Stop
+</button>
+
+<br><br>
+
+<button class="action" onclick="resetStopwatch()">
+Reset
+</button>
+`;
+
+break;
+
+
+case"words":
+
+html=`
+${text}
+
+<button class="action" onclick="countWords()">
+Analyze
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"case":
+
+html=`
+${text}
+
+<button class="action"
+onclick="convertCase('upper')">
+UPPERCASE
+</button>
+
+<br><br>
+
+<button class="action"
+onclick="convertCase('lower')">
+lowercase
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"reverse":
+
+html=`
+${text}
+
+<button class="action" onclick="reverseText()">
+Reverse
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"spaces":
+
+html=`
+${text}
+
+<button class="action" onclick="removeSpaces()">
+Clean Spaces
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"lines":
+
+html=`
+${text}
+
+<button class="action" onclick="countLines()">
+Count Lines
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"slug":
+
+html=`
+<input id="input" class="input"
+placeholder="Judul halaman">
+
+<button class="action" onclick="slug()">
+Generate Slug
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"sort":
+
+html=`
+${text}
+
+<button class="action" onclick="sortText()">
+Sort
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"duplicate":
+
+html=`
+${text}
+
+<button class="action" onclick="duplicate()">
+Remove Duplicate
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"json":
+
+html=`
+${text}
+
+<button class="action" onclick="formatJSON()">
+Format JSON
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"jsonmini":
+
+html=`
+${text}
+
+<button class="action" onclick="minifyJSON()">
+Minify JSON
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"b64encode":
+
+html=`
+${text}
+
+<button class="action" onclick="base64Encode()">
+Encode
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"b64decode":
+
+html=`
+${text}
+
+<button class="action" onclick="base64Decode()">
+Decode
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"urlencode":
+
+html=`
+${text}
+
+<button class="action" onclick="urlEncode()">
+Encode URL
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"urldecode":
+
+html=`
+${text}
+
+<button class="action" onclick="urlDecode()">
+Decode URL
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"uuid":
+
+html=`
+<div class="result bigResult" id="result">
+${crypto.randomUUID()}
+</div>
+
+<button class="action" onclick="newUUID()">
+Generate UUID
+</button>
+`;
+
+break;
+
+
+case"password":
+
+html=`
+<div class="result bigResult" id="result"></div>
+
+<button class="action" onclick="password()">
+Generate Password
+</button>
+`;
+
+setTimeout(password,10);
+
+break;
+
+
+case"hash":
+
+html=`
+${text}
+
+<button class="action" onclick="sha256()">
+Generate SHA-256
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"escape":
+
+html=`
+${text}
+
+<button class="action" onclick="escapeHTML()">
+Escape HTML
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"html":
+
+html=`
+${text}
+
+<button class="action" onclick="previewHTML()">
+Preview HTML
+</button>
+
+<div class="result" id="result">
+Preview akan dibuka di tab baru.
+</div>
+`;
+
+break;
+
+
+case"hex":
+
+html=`
+<input id="input" class="input"
+placeholder="#159cff">
+
+<button class="action" onclick="hexToRGB()">
+Convert
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"random":
+
+html=`
+<input id="input" class="input"
+placeholder="Maximum, contoh 100">
+
+<button class="action" onclick="randomNumber()">
+Generate
+</button>
+
+<div class="result bigResult" id="result"></div>
+`;
+
+break;
+
+
+case"randomcolor":
+
+html=`
+<div class="result bigResult" id="result">
+#159CFF
+</div>
+
+<button class="action" onclick="randomColor()">
+Generate Color
+</button>
+`;
+
+break;
+
+
+case"binary":
+
+html=`
+${text}
+
+<button class="action" onclick="binary()">
+Convert
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"morse":
+
+html=`
+${text}
+
+<button class="action" onclick="morse()">
+Convert
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"lorem":
+
+html=`
+<input id="amount" class="input"
+placeholder="Jumlah paragraf">
+
+<button class="action" onclick="lorem()">
+Generate
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"timestamp":
+
+html=`
+<div class="result bigResult" id="result">
+${Math.floor(Date.now()/1000)}
+</div>
+
+<button class="action"
+onclick="document.getElementById('result').textContent=Math.floor(Date.now()/1000)">
+Refresh
+</button>
+`;
+
+break;
+
+
+case"ratio":
+
+html=`
+<input id="width" class="input"
+placeholder="Width">
+
+<input id="height" class="input"
+placeholder="Height">
+
+<button class="action" onclick="ratio()">
+Calculate
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"picker":
+
+html=`
+<input id="picker"
+type="color"
+value="#159cff"
+style="width:100%;height:100px;margin-bottom:10px">
+
+<button class="action" onclick="getColor()">
+Get Color
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+
+case"ip":
+
+html=`
+<div class="result bigResult" id="result">
+Loading...
+</div>
+
+<button class="action" onclick="getIP()">
+Refresh
+</button>
+`;
+
+setTimeout(getIP,10);
+
+break;
+
+
+case"ua":
+
+html=`
+<div class="result">
+${navigator.userAgent}
+</div>
+`;
+
+break;
+
+
+case"urlparse":
+
+html=`
+<input id="input" class="input"
+placeholder="https://example.com/test?q=hello">
+
+<button class="action" onclick="parseURL()">
+Analyze URL
+</button>
+
+<div class="result" id="result"></div>
+`;
+
+break;
+
+}
+
+box.innerHTML=html;
+
+}
+
+
+/* ==========================================
+   TOOL FUNCTIONS
+========================================== */
+
+function val(id){
+return document.getElementById(id)?.value || "";
+}
+
+function out(text){
+const el=document.getElementById("result");
+if(el)el.textContent=text;
+}
+
+function calculate(){
+
+try{
+out(Function('"use strict";return ('+val("input")+')')());
+}catch{
+out("Perhitungan tidak valid.");
+}
+
+}
+
+function percent(){
+
+const a=Number(val("a"));
+const b=Number(val("b"));
+
+out(
+b ? ((a/b)*100).toFixed(2)+"%" :
+"Input tidak valid."
+);
+
+}
+
+function discount(){
+
+const price=Number(val("price"));
+const disc=Number(val("disc"));
+
+const cut=price*disc/100;
+
+out(
+"Potongan: "+cut+
+"\nHarga akhir: "+(price-cut)
+);
+
+}
+
+function calculateAge(){
+
+const date=new Date(val("birth"));
+
+if(isNaN(date)){
+out("Pilih tanggal lahir.");
+return;
+}
+
+const now=new Date();
+
+let age=
+now.getFullYear()-date.getFullYear();
+
+if(
+now.getMonth()<date.getMonth() ||
+(
+now.getMonth()===date.getMonth() &&
+now.getDate()<date.getDate()
+)
+)age--;
+
+out(age+" tahun");
+
+}
+
+let countdownTimer;
+
+function startCountdown(){
+
+clearInterval(countdownTimer);
+
+const target=
+new Date(val("countDate")).getTime();
+
+if(!target){
+out("Pilih waktu.");
+return;
+}
+
+countdownTimer=setInterval(()=>{
+
+const diff=target-Date.now();
+
+if(diff<=0){
+
+clearInterval(countdownTimer);
+
+out("SELESAI");
+
+return;
+
+}
+
+const s=Math.floor(diff/1000);
+
+const d=Math.floor(s/86400);
+const h=Math.floor(s%86400/3600);
+const m=Math.floor(s%3600/60);
+const sec=s%60;
+
+out(
+`${d}d ${h}h ${m}m ${sec}s`
+);
+
+},500);
+
+}
+
+let stopwatchTimer=null;
+let stopwatchStart=0;
+let stopwatchElapsed=0;
+
+function startStopwatch(){
+
+if(stopwatchTimer)return;
+
+stopwatchStart=
+Date.now()-stopwatchElapsed;
+
+stopwatchTimer=setInterval(()=>{
+
+stopwatchElapsed=
+Date.now()-stopwatchStart;
+
+const s=
+Math.floor(stopwatchElapsed/1000);
+
+const h=
+String(Math.floor(s/3600)).padStart(2,"0");
+
+const m=
+String(Math.floor(s%3600/60)).padStart(2,"0");
+
+const sec=
+String(s%60).padStart(2,"0");
+
+out(`${h}:${m}:${sec}`);
+
+},200);
+
+}
+
+function stopStopwatch(){
+
+clearInterval(stopwatchTimer);
+
+stopwatchTimer=null;
+
+}
+
+function resetStopwatch(){
+
+stopStopwatch();
+
+stopwatchElapsed=0;
+
+out("00:00:00");
+
+}
+
+function countWords(){
+
+const text=val("input");
+
+const words=
+text.trim()
+?text.trim().split(/\s+/).length
+:0;
+
+const chars=text.length;
+
+const lines=
+text?text.split("\n").length:0;
+
+out(
+`Words: ${words}
+Characters: ${chars}
+Lines: ${lines}`
+);
+
+}
+
+function convertCase(type){
+
+const text=val("input");
+
+out(
+type==="upper"
+?text.toUpperCase()
+:text.toLowerCase()
+);
+
+}
+
+function reverseText(){
+
+out([...val("input")].reverse().join(""));
+
+}
+
+function removeSpaces(){
+
+out(
+val("input")
+.replace(/\s+/g," ")
+.trim()
+);
+
+}
+
+function countLines(){
+
+const text=val("input");
+
+out(
+text?text.split("\n").length:0
+);
+
+}
+
+function slug(){
+
+out(
+val("input")
+.toLowerCase()
+.trim()
+.replace(/[^a-z0-9]+/g,"-")
+.replace(/^-|-$/g,"")
+);
+
+}
+
+function sortText(){
+
+out(
+val("input")
+.split("\n")
+.sort((a,b)=>a.localeCompare(b))
+.join("\n")
+);
+
+}
+
+function duplicate(){
+
+out(
+[...new Set(
+val("input").split("\n")
+)].join("\n")
+);
+
+}
+
+function formatJSON(){
+
+try{
+
+out(
+JSON.stringify(
+JSON.parse(val("input")),
+null,
+2
+)
+);
+
+}catch{
+
+out("JSON tidak valid.");
+
+}
+
+}
+
+function minifyJSON(){
+
+try{
+
+out(
+JSON.stringify(
+JSON.parse(val("input"))
+)
+);
+
+}catch{
+
+out("JSON tidak valid.");
+
+}
+
+}
+
+function base64Encode(){
+
+try{
+
+out(
+btoa(
+unescape(
+encodeURIComponent(
+val("input")
+)
+)
+)
+);
+
+}catch{
+
+out("Gagal encode.");
+
+}
+
+}
+
+function base64Decode(){
+
+try{
+
+out(
+decodeURIComponent(
+escape(
+atob(val("input"))
+)
+)
+);
+
+}catch{
+
+out("Base64 tidak valid.");
+
+}
+
+}
+
+function urlEncode(){
+
+out(
+encodeURIComponent(
+val("input")
+)
+);
+
+}
+
+function urlDecode(){
+
+try{
+
+out(
+decodeURIComponent(
+val("input")
+)
+);
+
+}catch{
+
+out("URL tidak valid.");
+
+}
+
+}
+
+function newUUID(){
+
+out(crypto.randomUUID());
+
+}
+
+function password(){
+
+const chars=
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+
+let pass="";
+
+for(let i=0;i<18;i++){
+
+pass+=chars[
+Math.floor(Math.random()*chars.length)
+];
+
+}
+
+out(pass);
+
+}
+
+async function sha256(){
+
+const data=
+new TextEncoder().encode(val("input"));
+
+const hash=
+await crypto.subtle.digest(
+"SHA-256",
+data
+);
+
+out(
+[...new Uint8Array(hash)]
+.map(x=>x.toString(16).padStart(2,"0"))
+.join("")
+);
+
+}
+
+function escapeHTML(){
+
+out(
+val("input")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;")
+);
+
+}
+
+function previewHTML(){
+
+const win=window.open();
+
+if(!win){
+
+out("Popup browser diblokir.");
+
+return;
+
+}
+
+win.document.write(val("input"));
+
+win.document.close();
+
+}
+
+function hexToRGB(){
+
+let hex=
+val("input")
+.replace("#","")
+.trim();
+
+if(hex.length!==6){
+
+out("Gunakan HEX 6 digit.");
+
+return;
+
+}
+
+const r=parseInt(hex.slice(0,2),16);
+const g=parseInt(hex.slice(2,4),16);
+const b=parseInt(hex.slice(4,6),16);
+
+out(`rgb(${r}, ${g}, ${b})`);
+
+}
+
+function randomNumber(){
+
+const max=
+Number(val("input"))||100;
+
+out(
+Math.floor(
+Math.random()*max
+)+1
+);
+
+}
+
+function randomColor(){
+
+const color=
+"#"+
+Math.floor(
+Math.random()*16777215
+)
+.toString(16)
+.padStart(6,"0")
+.toUpperCase();
+
+out(color);
+
+}
+
+function binary(){
+
+const text=val("input");
+
+out(
+[...text]
+.map(c=>
+c.charCodeAt(0)
+.toString(2)
+.padStart(8,"0")
+)
+.join(" ")
+);
+
+}
+
+const morseMap={
+A:".-",B:"-...",C:"-.-.",D:"-..",
+E:".",F:"..-.",G:"--.",H:"....",
+I:"..",J:".---",K:"-.-",L:".-..",
+M:"--",N:"-.",O:"---",P:".--.",
+Q:"--.-",R:".-.",S:"...",T:"-",
+U:"..-",V:"...-",W:".--",X:"-..-",
+Y:"-.--",Z:"--..",
+0:"-----",1:".----",2:"..---",
+3:"...--",4:"....-",5:".....",
+6:"-....",7:"--...",8:"---..",9:"----."
+};
+
+function morse(){
+
+out(
+val("input")
+.toUpperCase()
+.split("")
+.map(c=>c===" " ? "/" : morseMap[c]||"")
+.join(" ")
+);
+
+}
+
+function lorem(){
+
+const amount=
+Math.min(
+Number(val("amount"))||1,
+10
+);
+
+const text=
+"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+
+out(
+Array(amount)
+.fill(text)
+.join("\n\n")
+);
+
+}
+
+function ratio(){
+
+const w=Number(val("width"));
+const h=Number(val("height"));
+
+if(!w||!h){
+
+out("Masukkan width dan height.");
+
+return;
+
+}
+
+function gcd(a,b){
+return b?gcd(b,a%b):a;
+}
+
+const g=gcd(w,h);
+
+out(`${w/g}:${h/g}`);
+
+}
+
+function getColor(){
+
+out(
+document.getElementById("picker").value
+);
+
+}
+
+function getIP(){
+
+fetch("https://api.ipify.org?format=json")
+.then(r=>r.json())
+.then(data=>out(data.ip))
+.catch(()=>out("IP tidak tersedia."));
+
+}
+
+function parseURL(){
+
+try{
+
+const u=new URL(val("input"));
+
+out(
+`Protocol: ${u.protocol}
+Host: ${u.hostname}
+Port: ${u.port||"(default)"}
+Path: ${u.pathname}
+Query: ${u.search||"(none)"}`
+);
+
+}catch{
+
+out("URL tidak valid.");
+
+}
+
+}
+
+
+/* ==========================================
+   CLOSE POPUPS
+========================================== */
+
+function closeTool(){
+
+document
+.getElementById("toolOverlay")
+.classList.remove("active");
+
+}
+
+document
+.getElementById("toolOverlay")
+.addEventListener("click",e=>{
+
+if(e.target.id==="toolOverlay")
+closeTool();
+
+});
+
+document
+.getElementById("loginOverlay")
+.addEventListener("click",e=>{
+
+if(e.target.id==="loginOverlay")
+closeLogin();
+
+});
+
+document.addEventListener("keydown",e=>{
+
+if(e.key==="Escape"){
+
+closeTool();
+closeLogin();
+
+}
+
+});
+
+
+/* ==========================================
+   SCROLL REVEAL BERULANG
+========================================== */
+
+const revealObserver=
+new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.classList.add("show");
+
+}else{
+
+entry.target.classList.remove("show");
+
+}
+
+});
+
+},{
+threshold:.08
+});
+
+function observeReveal(){
+
+document
+.querySelectorAll(".reveal")
+.forEach(el=>
+revealObserver.observe(el)
+);
+
+}
+
+
+/* ==========================================
+   CLOCK
+========================================== */
+
+function clock(){
+
+document.getElementById("clock")
+.textContent=
+new Date().toLocaleTimeString("id-ID");
+
+}
+
+setInterval(clock,1000);
+
+clock();
+
+
+/* ==========================================
+   BATTERY
+========================================== */
+
+if(navigator.getBattery){
+
+navigator.getBattery().then(battery=>{
+
+function batteryUpdate(){
+
+const p=
+Math.round(
+battery.level*100
+);
+
+const el=
+document.getElementById("battery");
+
+el.textContent=
+p+"%"+(
+battery.charging
+?" ⚡"
+:""
+);
+
+el.className="";
+
+if(p>=80)
+el.classList.add("full");
+
+else if(p>=35)
+el.classList.add("medium");
+
+else
+el.classList.add("low");
+
+}
+
+battery.addEventListener(
+"levelchange",
+batteryUpdate
+);
+
+battery.addEventListener(
+"chargingchange",
+batteryUpdate
+);
+
+batteryUpdate();
+
+});
+
+}
+
+
+/* ==========================================
+   START
+========================================== */
+
+renderTools();
+
+</script>
+
+</body>
+</html>
