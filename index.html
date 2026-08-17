@@ -1,876 +1,1737 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BlueTools</title>
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BlueTools by lifx</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    
+    :root {
+      --bg-body: #02070d;
+      --bg-header: rgba(5,27,44,.9);
+      --bg-card: #071522;
+      --bg-tool: rgba(10,48,76,.72);
+      --bg-tool-hover: #0a2940;
+      --bg-input: #06131f;
+      --bg-side: #061827;
+      --bg-overlay: rgba(0,0,0,.76);
+      --bg-login: #050d15;
+      --bg-tabs: #071726;
+      --bg-tab: #0d2b45;
+      --bg-browser: #030a11;
+      --bg-content: #09223855;
+      --bg-result: #061521;
+      --border-color: rgba(76,190,255,.15);
+      --border-hover: rgba(65,180,255,.42);
+      --text-primary: #effaff;
+      --text-secondary: #7892a4;
+      --text-muted: #6e8799;
+      --text-dim: #526b7d;
+      --accent: #159cff;
+      --accent-glow: rgba(30,160,255,.3);
+      --shadow: 0 15px 60px rgba(0,0,0,.45);
+      --transition: .25s cubic-bezier(.2,.8,.2,1);
+      --bg-top: #0a0a1a;
+      --bg-top2: #0d1b2a;
+      --bg-bottom: #1a2a3a;
+      --bg-bottom2: #0a0f1a;
+      --grid-color: rgba(100, 150, 200, 0.08);
+      --fade-color1: rgba(13, 200, 218, 0);
+      --fade-color2: rgba(95, 41, 199, 0);
+      /* Marquee - outline color */
+      --marquee-color: rgba(255, 255, 255, 0.12);
+    }
 
-*{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
-:root{
---blue:#159cff;
---cyan:#63d5ff;
---dark:#02070d;
---card:#071522;
---line:rgba(76,190,255,.15);
---text:#effaff;
---muted:#7892a4;
-}
-body{
-min-height:100vh;
-font-family:Outfit,sans-serif;
-color:var(--text);
-background:
-linear-gradient(to bottom,rgba(255,255,255,.025),transparent 35%),
-linear-gradient(135deg,#020912,#031827 35%,#06375a 65%,#06101c);
-overflow-x:hidden;
-position:relative;
-}
-body:before{
-content:"";
-position:fixed;
-inset:0;
-z-index:-3;
-background-image:linear-gradient(90deg,rgba(73,190,255,.12) 1px,transparent 1px);
-background-size:50px 100%;
-mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.7) 40%,transparent);
--webkit-mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.7) 40%,transparent);
-pointer-events:none;
-}
-body:after{
-content:"";
-position:fixed;
-inset:0;
-z-index:-2;
-background-image:linear-gradient(rgba(72,184,255,.045) 1px,transparent 1px);
-background-size:100% 50px;
-mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.5),transparent);
--webkit-mask-image:linear-gradient(to bottom,#000,rgba(0,0,0,.5),transparent);
-pointer-events:none;
-}
-html:before{
-content:"";
-position:fixed;
-width:700px;
-height:700px;
-left:50%;
-top:-420px;
-transform:translateX(-50%);
-z-index:-1;
-background:radial-gradient(circle,rgba(27,171,255,.3),rgba(0,126,220,.12) 35%,transparent 72%);
-filter:blur(10px);
-pointer-events:none;
-}
-html:after{
-content:"";
-position:fixed;
-inset:0;
-z-index:-1;
-pointer-events:none;
-background:
-linear-gradient(to right,rgba(0,0,0,.7),transparent 18%,transparent 82%,rgba(0,0,0,.7)),
-linear-gradient(to bottom,transparent 50%,rgba(0,0,0,.7));
-}
+    /* ----- light theme override ----- */
+    body.light {
+      --bg-body: #ffffff;
+      --bg-header: rgba(255, 255, 255, .85);
+      --bg-card: #f0f4f8;
+      --bg-tool: rgba(255, 255, 255, .7);
+      --bg-tool-hover: #e8edf3;
+      --bg-input: #f0f4f8;
+      --bg-side: #f5f8fc;
+      --bg-overlay: rgba(200, 215, 230, .7);
+      --bg-login: #ffffff;
+      --bg-tabs: #e8edf3;
+      --bg-tab: #dce3ec;
+      --bg-browser: #f0f5fa;
+      --bg-content: #f5f8fc;
+      --bg-result: #f0f4f8;
+      --border-color: rgba(30, 80, 150, .15);
+      --border-hover: rgba(20, 80, 180, .4);
+      --text-primary: #0a1a2a;
+      --text-secondary: #2a4a6a;
+      --text-muted: #4a6a8a;
+      --text-dim: #5a7a9a;
+      --accent: #0066cc;
+      --accent-glow: rgba(0, 100, 200, .2);
+      --shadow: 0 15px 40px rgba(0,20,60,.12);
+      --bg-top: #ffffff;
+      --bg-top2: #f0f5fa;
+      --bg-bottom: #e8edf5;
+      --bg-bottom2: #fafcfe;
+      --grid-color: rgba(100, 120, 140, 0.15);
+      --fade-color1: rgba(14, 210, 218, 0.15);
+      --fade-color2: rgba(95, 41, 199, 0.15);
+      --marquee-color: rgba(10, 26, 42, 0.10);
+    }
 
-button,input,textarea{font-family:inherit}
+    /* ===== LATAR BELAKANG ===== */
+    body {
+      min-height: 100vh;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-primary);
+      background: 
+        linear-gradient(
+          to bottom,
+          var(--bg-top) 0%,
+          var(--bg-top2) 40%,
+          var(--fade-color1) 70%,
+          var(--fade-color2) 100%
+        ),
+        linear-gradient(
+          to right, 
+          var(--bg-bottom), 
+          var(--bg-bottom2)
+        );
+      position: relative;
+      overflow-x: hidden;
+      transition: background .5s ease, color .3s ease;
+    }
 
-header{
-position:sticky;
-top:12px;
-z-index:500;
-width:min(1200px,calc(100% - 24px));
-margin:12px auto;
-padding:10px;
-display:flex;
-align-items:center;
-gap:10px;
-border:1px solid rgba(80,190,255,.18);
-border-radius:17px;
-background:linear-gradient(135deg,rgba(5,27,44,.9),rgba(2,10,17,.84));
-backdrop-filter:blur(24px);
--webkit-backdrop-filter:blur(24px);
-box-shadow:0 15px 60px rgba(0,0,0,.45),0 0 40px rgba(0,140,255,.05);
-}
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      background-image: linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+      background-size: 50px 100%;
+      pointer-events: none;
+      mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0) 70%
+      );
+      -webkit-mask-image: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 1) 0%,
+        rgba(0, 0, 0, 0) 70%
+      );
+      transition: background-image .5s ease;
+    }
 
-.logo{display:flex;align-items:center;gap:9px;white-space:nowrap}
-.logoIcon{
-width:38px;height:38px;display:grid;place-items:center;
-border-radius:11px;background:linear-gradient(145deg,#29adff,#07529a);
-box-shadow:0 0 30px rgba(20,150,255,.25)
-}
-.logoIcon svg{width:20px;fill:none;stroke:#fff;stroke-width:2}
-.logo b{font-size:15px}.logo span{color:#35adff}
+    body::after {
+      content: "";
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      left: 50%;
+      top: -300px;
+      transform: translateX(-50%);
+      z-index: -1;
+      background: radial-gradient(circle, rgba(27,171,255,.15), rgba(0,126,220,.05) 35%, transparent 72%);
+      filter: blur(30px);
+      pointer-events: none;
+      transition: opacity .5s ease;
+    }
 
-.info{
-margin-left:auto;
-display:flex;
-align-items:center;
-gap:12px;
-font-size:9px;
-color:#7e99ab;
-}
-.infoItem{display:flex;align-items:center;gap:5px;white-space:nowrap}
-.infoItem svg{width:14px;height:14px;fill:none;stroke:#52baff;stroke-width:1.8}
-#battery.full{color:#42e991}
-#battery.medium{color:#ffd45a}
-#battery.low{color:#ff6270}
+    body.light::after {
+      background: radial-gradient(circle, rgba(0,100,200,.08), rgba(0,80,180,.03) 35%, transparent 72%);
+    }
 
-.search{
-width:200px;height:36px;
-padding:0 12px;
-outline:0;
-border:1px solid var(--line);
-border-radius:10px;
-background:#06131f;
-color:#fff;
-font-size:10px;
-}
-.search:focus{border-color:#299fff;box-shadow:0 0 0 3px rgba(30,150,255,.08)}
+    button, input, textarea { font-family: inherit; }
 
-.profileBtn,.menuBtn{
-width:36px;height:36px;
-border:1px solid var(--line);
-border-radius:10px;
-background:#06131f;
-color:#72c7ff;
-display:grid;
-place-items:center;
-cursor:pointer;
-transition:.25s;
-}
-.profileBtn:hover,.menuBtn:hover{background:#0b2940;transform:translateY(-2px)}
-.profileBtn svg,.menuBtn svg{width:18px;fill:none;stroke:currentColor;stroke-width:2}
+    /* ----- header ----- */
+    header {
+      position: sticky;
+      top: 12px;
+      z-index: 500;
+      width: min(1200px, calc(100% - 24px));
+      margin: 12px auto;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 17px;
+      background: var(--bg-header);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      box-shadow: var(--shadow), 0 0 40px rgba(0,140,255,.05);
+      transition: background .3s ease, border .3s ease, box-shadow .3s ease;
+    }
+    .logo { display: flex; align-items: center; gap: 9px; white-space: nowrap; }
+    .logoIcon {
+      width: 38px; height: 38px;
+      display: grid; place-items: center;
+      border-radius: 11px;
+      background: linear-gradient(145deg, #29adff, #07529a);
+      box-shadow: 0 0 30px rgba(20,150,255,.25);
+    }
+    .logoIcon svg { width: 20px; fill: none; stroke: #fff; stroke-width: 2; }
+    .logo b { font-size: 15px; }
+    .logo span { color: #35adff; }
+    body.light .logo span { color: #0066bb; }
 
-.account{
-display:none;
-align-items:center;
-gap:7px;
-padding:4px 6px 4px 4px;
-border:1px solid var(--line);
-border-radius:10px;
-background:#06131f;
-}
-.account.show{display:flex}
-.account img{width:27px;height:27px;border-radius:50%}
-.accountName{max-width:80px;font-size:9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.logout{
-border:0;border-radius:6px;padding:6px 8px;
-background:#102b41;color:#72c7ff;font-size:9px;cursor:pointer;
-}
+    .info { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 9px; color: var(--text-secondary); }
+    .infoItem { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+    .infoItem svg { width: 14px; height: 14px; fill: none; stroke: var(--accent); stroke-width: 1.8; }
+    #battery.full { color: #42e991; }
+    #battery.medium { color: #ffd45a; }
+    #battery.low { color: #ff6270; }
 
-.sideMenu{
-position:fixed;
-top:0;
-right:-330px;
-width:310px;
-height:100vh;
-z-index:8000;
-padding:90px 20px 20px;
-background:linear-gradient(145deg,#061827,#02070c);
-border-left:1px solid rgba(70,190,255,.2);
-box-shadow:-20px 0 80px rgba(0,0,0,.55);
-transition:.4s cubic-bezier(.2,.8,.2,1);
-}
-.sideMenu.open{right:0}
-.sideHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:25px}
-.sideHead h2{font-size:20px}
-.sideClose{
-width:35px;height:35px;border:0;border-radius:9px;
-background:#102b41;color:#fff;font-size:20px;cursor:pointer
-}
-.menuItem{
-width:100%;
-padding:13px;
-margin-bottom:8px;
-display:flex;
-align-items:center;
-gap:11px;
-border:1px solid rgba(80,180,255,.1);
-border-radius:11px;
-background:#061521;
-color:#b8d9ea;
-font-size:10px;
-cursor:pointer;
-text-align:left;
-}
-.menuItem:hover{background:#0a2940;color:#fff}
-.menuItem svg{width:17px;height:17px;fill:none;stroke:#54bdff;stroke-width:2}
+    .search {
+      width: 200px; height: 36px;
+      padding: 0 12px;
+      outline: 0;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 10px;
+      transition: background .3s, border .3s, color .3s;
+    }
+    .search:focus { border-color: #299fff; box-shadow: 0 0 0 3px rgba(30,150,255,.08); }
 
-.menuShade{
-position:fixed;inset:0;z-index:7999;
-background:rgba(0,0,0,.55);
-backdrop-filter:blur(4px);
-display:none;
-}
-.menuShade.show{display:block}
+    .profileBtn {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-input);
+      color: #72c7ff;
+      display: grid; place-items: center;
+      cursor: pointer;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    .profileBtn:hover {
+      background: var(--bg-tool-hover);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 15px rgba(21, 156, 255, 0.2);
+      border-color: var(--accent);
+    }
+    .profileBtn:active { transform: scale(0.95); }
+    .profileBtn svg {
+      width: 18px; height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      transition: transform .3s ease;
+    }
+    .profileBtn:hover svg { transform: rotate(-10deg) scale(1.1); }
+    .profileBtn .badge-dot {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      width: 8px;
+      height: 8px;
+      background: #ff4757;
+      border-radius: 50%;
+      border: 2px solid var(--bg-input);
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
 
-.hero{
-width:min(1000px,calc(100% - 30px));
-margin:105px auto 70px;
-text-align:center;
-}
-.badge{
-display:inline-flex;align-items:center;gap:7px;
-padding:7px 12px;
-border:1px solid rgba(55,170,255,.2);
-border-radius:100px;
-background:rgba(30,140,220,.07);
-color:#73caff;font-size:9px;margin-bottom:18px;
-}
-.badge i{width:6px;height:6px;border-radius:50%;background:#48baff;box-shadow:0 0 12px #48baff}
-.hero h1{font-size:clamp(43px,7vw,78px);line-height:.95;letter-spacing:-4px}
-.hero h1 span{color:#2eabff;text-shadow:0 0 45px rgba(30,160,255,.3)}
-.hero p{max-width:600px;margin:20px auto 0;color:#6e8799;font-size:12px;line-height:1.8}
+    .menuBtn {
+      width: 36px; height: 36px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-input);
+      color: #72c7ff;
+      display: grid; place-items: center;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+    .menuBtn:hover {
+      background: var(--bg-tool-hover);
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 4px 15px rgba(21, 156, 255, 0.2);
+    }
+    .menuBtn svg { width: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
 
-.marquee{
-width:100%;overflow:hidden;margin-bottom:80px;
-border-top:1px solid var(--line);
-border-bottom:1px solid var(--line);
-mask-image:linear-gradient(to right,transparent,black 12%,black 88%,transparent);
--webkit-mask-image:linear-gradient(to right,transparent,black 12%,black 88%,transparent);
-}
-.marqueeTrack{width:max-content;display:flex;animation:marquee 48s linear infinite}
-.marqueeTrack span{
-padding-right:60px;font-size:clamp(50px,7vw,95px);
-font-weight:800;letter-spacing:-5px;white-space:nowrap;
-color:transparent;-webkit-text-stroke:1px rgba(80,180,255,.12);
-}
-@keyframes marquee{to{transform:translateX(-50%)}}
+    .account {
+      display: none;
+      align-items: center;
+      gap: 7px;
+      padding: 4px 6px 4px 4px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      background: var(--bg-input);
+      transition: all .3s ease;
+    }
+    .account.show { display: flex; }
+    .account img {
+      width: 27px; height: 27px;
+      border-radius: 50%;
+      border: 2px solid var(--accent);
+      object-fit: cover;
+    }
+    .accountName { max-width: 80px; font-size: 9px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 
-main{width:min(1180px,calc(100% - 24px));margin:auto}
-.category{margin-bottom:70px}
-.categoryHead{
-display:flex;justify-content:space-between;align-items:end;margin-bottom:15px
-}
-.categoryHead h2{font-size:20px}
-.categoryHead p{margin-top:4px;font-size:9px;color:#526b7d}
-.count{font-size:9px;color:#4b8db7}
-.tools{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+    /* ----- side menu ----- */
+    .sideMenu {
+      position: fixed;
+      top: 0;
+      right: -330px;
+      width: 310px;
+      height: 100vh;
+      z-index: 8000;
+      padding: 90px 20px 20px;
+      background: var(--bg-side);
+      border-left: 1px solid var(--border-color);
+      box-shadow: -20px 0 80px rgba(0,0,0,.55);
+      transition: .4s cubic-bezier(.2,.8,.2,1);
+    }
+    .sideMenu.open { right: 0; }
+    .sideHead { display: flex; align-items: center; justify-content: space-between; margin-bottom: 25px; }
+    .sideHead h2 { font-size: 20px; color: var(--text-primary); }
+    .sideClose {
+      width: 35px; height: 35px; border: 0; border-radius: 9px;
+      background: var(--bg-input); color: var(--text-primary); font-size: 20px; cursor: pointer;
+      transition: all .3s ease;
+    }
+    .sideClose:hover {
+      background: var(--bg-tool-hover);
+      transform: rotate(90deg);
+    }
 
-.tool{
-position:relative;
-overflow:hidden;
-min-height:115px;
-padding:16px;
-text-align:left;
-border:1px solid rgba(82,190,255,.14);
-border-radius:15px;
-background:linear-gradient(145deg,rgba(10,48,76,.72),rgba(2,12,21,.92));
-backdrop-filter:blur(14px);
-color:#fff;
-cursor:pointer;
-transition:.3s cubic-bezier(.2,.8,.2,1);
-}
-.tool:before{
-content:"";
-position:absolute;inset:0;
-background:linear-gradient(110deg,transparent,rgba(60,180,255,.1),transparent);
-transform:translateX(-110%);
-transition:.8s;
-}
-.tool:after{
-content:"";
-position:absolute;
-top:0;left:-120%;
-width:70%;height:1px;
-background:linear-gradient(90deg,transparent,rgba(80,205,255,.8),transparent);
-animation:toolScan 5s linear infinite;
-}
-@keyframes toolScan{0%{left:-120%}100%{left:150%}}
-.tool:hover{
-transform:translateY(-5px);
-border-color:rgba(65,180,255,.42);
-box-shadow:0 18px 45px rgba(0,100,180,.18)
-}
-.tool:hover:before{transform:translateX(110%)}
-.icon{
-width:32px;height:32px;display:grid;place-items:center;
-margin-bottom:12px;border:1px solid rgba(70,180,255,.14);
-border-radius:8px;background:rgba(35,155,255,.1)
-}
-.icon svg{width:17px;fill:none;stroke:#5bc0ff;stroke-width:1.8}
-.tool h3{font-size:12px;margin-bottom:4px}
-.tool p{font-size:9px;line-height:1.45;color:#607a8c}
+    .menuItem {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border: 1px solid var(--border-color);
+      border-radius: 11px;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all .2s ease;
+    }
+    .menuItem:hover {
+      background: var(--bg-tool-hover);
+      color: var(--text-primary);
+      transform: translateX(5px);
+      border-color: var(--accent);
+    }
+    .menuItem svg { width: 17px; height: 17px; fill: none; stroke: var(--accent); stroke-width: 2; }
 
-footer{padding:70px 20px 40px;text-align:center;color:#3e586b;font-size:9px}
+    /* Toggle tema */
+    .themeToggle {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border: 1px solid var(--border-color);
+      border-radius: 11px;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all .2s ease;
+    }
+    .themeToggle:hover {
+      background: var(--bg-tool-hover);
+      color: var(--text-primary);
+      transform: translateX(5px);
+      border-color: var(--accent);
+    }
+    
+    .themeToggle .toggleIcon {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      position: relative;
+      width: 24px;
+      height: 24px;
+    }
+    
+    .themeToggle .toggleIcon svg {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      transition: opacity .3s ease, transform .3s ease;
+      will-change: transform, opacity;
+    }
+    
+    .themeToggle .toggleIcon .sun-icon {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+    
+    .themeToggle .toggleIcon .moon-icon {
+      opacity: 0;
+      transform: scale(0.7) rotate(20deg);
+    }
+    
+    body.light .themeToggle .toggleIcon .sun-icon {
+      opacity: 0;
+      transform: scale(0.7) rotate(-20deg);
+    }
+    
+    body.light .themeToggle .toggleIcon .moon-icon {
+      opacity: 1;
+      transform: scale(1) rotate(0deg);
+    }
+    
+    .themeToggle .toggleLabel {
+      flex: 1;
+      transition: color .3s ease;
+    }
 
-.reveal{
-opacity:0;
-transform:translateY(35px);
-transition:opacity .75s ease,transform .75s cubic-bezier(.2,.7,.2,1);
-}
-.reveal.show{opacity:1;transform:none}
+    /* Toggle animasi */
+    .animToggle {
+      width: 100%;
+      padding: 13px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      border: 1px solid var(--border-color);
+      border-radius: 11px;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 10px;
+      cursor: pointer;
+      text-align: left;
+      transition: all .2s ease;
+      user-select: none;
+    }
+    .animToggle:hover {
+      background: var(--bg-tool-hover);
+      color: var(--text-primary);
+      transform: translateX(5px);
+      border-color: var(--accent);
+    }
 
-/* OVERLAYS */
-.overlay,.toolOverlay,.profileOverlay{
-position:fixed;inset:0;z-index:9000;
-display:none;align-items:center;justify-content:center;padding:15px;
-background:rgba(0,0,0,.76);
-backdrop-filter:blur(18px);
-}
-.overlay.active,.toolOverlay.active,.profileOverlay.active{display:flex}
+    .switch {
+      position: relative;
+      width: 40px;
+      height: 22px;
+      flex-shrink: 0;
+    }
+    
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #2a4a5e;
+      transition: .3s ease;
+      border-radius: 22px;
+    }
+    
+    .slider::before {
+      content: "";
+      position: absolute;
+      height: 16px;
+      width: 16px;
+      left: 3px;
+      bottom: 3px;
+      background: white;
+      transition: .3s ease;
+      border-radius: 50%;
+      box-shadow: 0 2px 4px rgba(0,0,0,.2);
+    }
+    
+    .switch input:checked + .slider {
+      background: #159cff;
+    }
+    
+    .switch input:checked + .slider::before {
+      transform: translateX(18px);
+    }
+    
+    .animToggle .toggleLabel {
+      flex: 1;
+      transition: color .3s ease;
+      font-weight: 500;
+    }
 
-.login,.profileCard{
-position:relative;
-width:min(390px,100%);
-padding:35px 26px;
-text-align:center;
-border:1px solid rgba(55,175,255,.3);
-border-radius:20px;
-background:radial-gradient(circle at 50% 0,rgba(30,160,255,.18),transparent 55%),#050d15;
-box-shadow:0 30px 100px #000,0 0 70px rgba(0,130,255,.13);
-animation:open .35s cubic-bezier(.2,.8,.2,1);
-}
-@keyframes open{from{opacity:0;transform:scale(.92) translateY(20px)}to{opacity:1;transform:none}}
+    /* ===== KONTROL ANIMASI ===== */
+    body.anim-on .reveal {
+      transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1);
+    }
+    
+    body.anim-on .tool::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 70%; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(80,205,255,.8), transparent);
+      animation: toolScan 3s linear infinite;
+    }
+    
+    body.anim-on .tool {
+      transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s, box-shadow .3s;
+    }
+    
+    body.anim-on .tool:hover {
+      transform: translateY(-5px) scale(1.02);
+    }
+    
+    body.anim-on .tool::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: linear-gradient(110deg, transparent, rgba(60,180,255,.1), transparent);
+      transform: translateX(-110%);
+      transition: .8s;
+    }
+    
+    body.anim-on .tool:hover::before {
+      transform: translateX(110%);
+    }
+    
+    body.anim-on .marqueeTrack {
+      animation: marqueeSlide 60s linear infinite;
+    }
+    
+    body.anim-on .profileBtn .badge-dot {
+      animation: pulse-dot 2s infinite;
+    }
+    
+    body:not(.anim-on) .reveal {
+      transition: none !important;
+    }
+    
+    body:not(.anim-on) .tool::after {
+      display: none !important;
+    }
+    
+    body:not(.anim-on) .tool::before {
+      display: none !important;
+    }
+    
+    body:not(.anim-on) .tool {
+      transition: none !important;
+    }
+    
+    body:not(.anim-on) .tool:hover {
+      transform: none !important;
+    }
+    
+    body:not(.anim-on) .marqueeTrack {
+      animation: none !important;
+    }
+    
+    body:not(.anim-on) .profileBtn .badge-dot {
+      animation: none !important;
+    }
+    
+    body:not(.anim-on) .profileBtn:hover {
+      transform: translateY(-2px) !important;
+    }
+    
+    body:not(.anim-on) .menuItem:hover {
+      transform: none !important;
+    }
+    
+    body:not(.anim-on) .themeToggle:hover {
+      transform: none !important;
+    }
+    
+    body:not(.anim-on) .animToggle:hover {
+      transform: none !important;
+    }
+    
+    body:not(.anim-on) .sideClose:hover {
+      transform: none !important;
+    }
 
-.loginLogo{
-width:55px;height:55px;display:grid;place-items:center;
-margin:auto auto 17px;border-radius:15px;
-background:linear-gradient(145deg,#29aaff,#0759a8);
-box-shadow:0 0 35px rgba(30,160,255,.25)
-}
-.loginLogo svg{width:27px;fill:none;stroke:#fff;stroke-width:2}
-.login h2,.profileCard h2{font-size:24px}
-.login p{max-width:290px;margin:9px auto 23px;color:#698398;font-size:11px;line-height:1.7}
-.close{
-position:absolute;right:12px;top:11px;width:30px;height:30px;
-border:0;border-radius:8px;background:transparent;color:#7891a2;font-size:20px;cursor:pointer
-}
-.close:hover{background:#12354e;color:white}
-#googleButton{display:flex;justify-content:center;min-height:44px}
-.login small{display:block;margin-top:17px;color:#385267;font-size:8px}
+    @keyframes toolScan { 
+      0% { left: -120%; } 
+      100% { left: 150%; } 
+    }
 
-.profileAvatar{
-width:75px;height:75px;border-radius:50%;margin:0 auto 14px;
-border:2px solid #2faaff;box-shadow:0 0 30px rgba(30,160,255,.2)
-}
-.profileEmail{margin-top:5px;color:#628096;font-size:10px}
-.profileStats{
-display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:20px
-}
-.stat{
-padding:13px;border:1px solid var(--line);border-radius:10px;background:#061521
-}
-.stat b{display:block;font-size:16px;color:#5fc2ff}
-.stat span{font-size:8px;color:#607a8c}
-.profileLogout{
-width:100%;margin-top:12px;padding:11px;border:0;border-radius:9px;
-background:#102b41;color:#78c9ff;font-weight:700;cursor:pointer
-}
+    @keyframes marqueeSlide {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
 
-/* TOOL BROWSER */
-.browser{
-width:min(720px,100%);
-height:min(570px,90vh);
-display:flex;flex-direction:column;overflow:hidden;
-border:1px solid rgba(65,180,255,.35);
-border-radius:14px;background:#030a11;
-box-shadow:0 30px 110px #000,0 0 70px rgba(0,130,255,.14);
-animation:open .3s ease;
-}
-.tabs{
-height:42px;display:flex;align-items:end;justify-content:space-between;
-padding-left:14px;background:#071726;border-bottom:1px solid rgba(70,170,255,.12)
-}
-.tab{
-height:35px;width:210px;padding:5px 9px;display:flex;align-items:center;gap:8px;
-border-radius:8px 8px 0 0;background:#0d2b45
-}
-.tab svg{width:14px;fill:#58bdff}.tab span{font-size:10px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
-.tab button{margin-left:auto;border:0;background:none;color:#8da6b7;font-size:18px;cursor:pointer}
-.windows{display:flex}.windows button{width:38px;height:30px;border:0;background:transparent;color:#91aabc;cursor:pointer}
-.windows button:hover{background:#143952;color:white}.windows .x:hover{background:#ed3d4c}
-.browserHead{
-height:48px;display:flex;align-items:center;gap:5px;padding:7px 9px;background:#0a2237
-}
-.nav{
-width:30px;height:30px;border:0;border-radius:7px;background:transparent;color:#8da6b7;cursor:pointer
-}
-.nav:hover{background:#123951;color:white}
-.address{position:relative;flex:1}
-.address input{
-width:100%;height:32px;padding:0 14px 0 34px;border:1px solid rgba(70,170,255,.13);
-border-radius:20px;outline:0;background:#061521;color:#eaf8ff;font-size:10px
-}
-.address svg{
-position:absolute;left:12px;top:9px;width:14px;height:14px;fill:none;stroke:#5dbfff;stroke-width:2
-}
-.content{flex:1;overflow:auto;padding:27px;background:linear-gradient(#09223855,#02070c)}
-.content::-webkit-scrollbar{width:5px}.content::-webkit-scrollbar-thumb{background:#145b89;border-radius:20px}
-.toolTitle{display:flex;align-items:center;gap:13px;margin-bottom:20px}
-.toolBigIcon{
-width:46px;height:46px;display:grid;place-items:center;border-radius:12px;
-background:rgba(40,160,255,.1);border:1px solid rgba(60,180,255,.2)
-}
-.toolBigIcon svg{width:22px;fill:none;stroke:#60c0ff;stroke-width:2}
-.toolTitle h2{font-size:21px}.toolTitle p{margin-top:3px;font-size:9px;color:#648095}
-.input,.textarea{
-width:100%;padding:13px;margin-bottom:9px;border:1px solid rgba(70,170,255,.14);
-border-radius:9px;outline:0;background:#061521;color:white;font-size:11px
-}
-.textarea{min-height:140px;resize:vertical}
-.input:focus,.textarea:focus{border-color:#299fff;box-shadow:0 0 0 3px rgba(30,150,255,.08)}
-.action{
-width:100%;min-height:40px;border:1px solid rgba(100,195,255,.25);border-radius:9px;
-background:linear-gradient(135deg,#299fff,#0968c8);color:white;font-weight:700;font-size:10px;
-cursor:pointer;transition:.25s
-}
-.action:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(20,135,255,.25)}
-.result{
-min-height:50px;padding:14px;margin-top:10px;border:1px solid rgba(75,170,255,.12);
-border-radius:9px;background:#061521;color:#83ceff;font-size:11px;white-space:pre-wrap;word-break:break-word
-}
-.bigResult{padding:25px;text-align:center;font-size:27px;font-weight:700}
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.7; }
+    }
 
-@media(max-width:900px){.tools{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:700px){
-.tools{grid-template-columns:repeat(2,1fr)}
-.infoItem:nth-child(2),.infoItem:nth-child(3){display:none}
-.search{width:150px}
-}
-@media(max-width:520px){
-header{flex-wrap:wrap}.search{width:100%;order:10}
-.info{margin-left:auto}.tools{grid-template-columns:1fr 1fr}
-.tool{min-height:108px;padding:13px}
-.hero{margin-top:75px}.hero h1{letter-spacing:-2px}
-.content{padding:19px}.accountName{display:none}
-}
-</style>
+    .menuShade {
+      position: fixed; inset: 0; z-index: 7999;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(4px);
+      display: none;
+    }
+    .menuShade.show { display: block; }
+
+    /* hero */
+    .hero { width: min(1000px, calc(100% - 30px)); margin: 105px auto 70px; text-align: center; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 7px;
+      padding: 7px 12px;
+      border: 1px solid rgba(55,170,255,.2);
+      border-radius: 100px;
+      background: rgba(30,140,220,.07);
+      color: #73caff; font-size: 9px; margin-bottom: 18px;
+    }
+    .badge i { width: 6px; height: 6px; border-radius: 50%; background: #48baff; box-shadow: 0 0 12px #48baff; }
+    .hero h1 { font-size: clamp(43px, 7vw, 78px); line-height: .95; letter-spacing: -4px; color: var(--text-primary); }
+    .hero h1 span { color: #2eabff; text-shadow: 0 0 45px var(--accent-glow); }
+    .hero p { max-width: 600px; margin: 20px auto 0; color: var(--text-secondary); font-size: 12px; line-height: 1.8; }
+
+    /* ===== MARQUEE SLIDE LAMBAT - TANPA ICON, TANPA SPASI ===== */
+    .marquee {
+      width: 100%;
+      overflow: hidden;
+      margin: 40px 0 60px;
+      padding: 20px 0;
+      border-top: 1px solid var(--border-color);
+      border-bottom: 1px solid var(--border-color);
+      background: transparent;
+      position: relative;
+      mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 3%, black 97%, transparent);
+    }
+
+    .marqueeTrack {
+      width: max-content;
+      display: flex;
+      animation: marqueeSlide 60s linear infinite;
+      gap: 0;
+      align-items: center;
+      will-change: transform;
+    }
+
+    /* Teks besar, rapat tanpa spasi */
+    .marqueeTrack .marquee-item {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      font-size: clamp(55px, 9vw, 130px);
+      font-weight: 900;
+      letter-spacing: 0;
+      white-space: nowrap;
+      position: relative;
+      padding: 0;
+      text-transform: uppercase;
+      font-family: 'Outfit', sans-serif;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    /* Text outline only */
+    .marqueeTrack .marquee-item .text {
+      color: transparent;
+      -webkit-text-stroke: 1.8px var(--marquee-color);
+      text-stroke: 1.8px var(--marquee-color);
+      font-weight: 900;
+      letter-spacing: 0;
+      transition: -webkit-text-stroke .4s ease, text-stroke .4s ease;
+      text-shadow: none;
+      font-size: inherit;
+      padding: 0;
+      margin: 0;
+    }
+
+    /* Hover effect */
+    .marqueeTrack .marquee-item:hover .text {
+      -webkit-text-stroke: 2.5px var(--accent);
+      text-stroke: 2.5px var(--accent);
+    }
+
+    /* Light mode adjustment */
+    body.light .marqueeTrack .marquee-item .text {
+      -webkit-text-stroke: 1.8px var(--marquee-color);
+      text-stroke: 1.8px var(--marquee-color);
+    }
+    
+    body.light .marqueeTrack .marquee-item:hover .text {
+      -webkit-text-stroke: 2.5px var(--accent);
+      text-stroke: 2.5px var(--accent);
+    }
+
+    /* ===== END MARQUEE ===== */
+
+    main { width: min(1180px, calc(100% - 24px)); margin: auto; }
+    .category { margin-bottom: 70px; }
+    .categoryHead { display: flex; justify-content: space-between; align-items: end; margin-bottom: 15px; }
+    .categoryHead h2 { font-size: 20px; color: var(--text-primary); }
+    .categoryHead p { margin-top: 4px; font-size: 9px; color: var(--text-dim); }
+    .count { font-size: 9px; color: #4b8db7; }
+
+    .tools { display: grid; grid-template-columns: repeat(4,1fr); gap: 9px; }
+    .tool {
+      position: relative;
+      overflow: hidden;
+      min-height: 115px;
+      padding: 16px;
+      text-align: left;
+      border: 1px solid var(--border-color);
+      border-radius: 15px;
+      background: var(--bg-tool);
+      backdrop-filter: blur(14px);
+      color: var(--text-primary);
+      cursor: pointer;
+    }
+    .tool:hover {
+      border-color: var(--border-hover);
+      box-shadow: 0 18px 45px rgba(0,100,180,.18);
+    }
+    .tool .icon {
+      width: 32px; height: 32px; display: grid; place-items: center;
+      margin-bottom: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      background: rgba(35,155,255,.1);
+    }
+    .tool .icon svg { width: 17px; fill: none; stroke: #5bc0ff; stroke-width: 1.8; }
+    .tool h3 { font-size: 12px; margin-bottom: 4px; color: var(--text-primary); }
+    .tool p { font-size: 9px; line-height: 1.45; color: var(--text-secondary); }
+
+    footer { padding: 70px 20px 40px; text-align: center; color: var(--text-dim); font-size: 9px; }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity .75s ease, transform .75s cubic-bezier(.2,.7,.2,1);
+    }
+    .reveal.show { opacity: 1; transform: none; }
+
+    /* ===== PROFILE OVERLAY ===== */
+    .profileOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(18px);
+      transition: background .3s;
+    }
+    .profileOverlay.active { display: flex; }
+
+    .profileCard {
+      position: relative;
+      width: min(420px, 100%);
+      padding: 40px 30px 30px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      background: var(--bg-login);
+      box-shadow: 0 30px 100px rgba(0,0,0,0.6), 0 0 70px rgba(0,130,255,.13);
+      animation: open .4s cubic-bezier(.2,.8,.2,1);
+      color: var(--text-primary);
+    }
+
+    .profileCard .close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all .3s ease;
+      display: grid;
+      place-items: center;
+    }
+    .profileCard .close:hover {
+      background: #ff4757;
+      color: white;
+      transform: rotate(90deg) scale(1.1);
+      border-color: #ff4757;
+    }
+
+    .profileAvatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      border: 3px solid var(--accent);
+      box-shadow: 0 0 30px var(--accent-glow);
+      object-fit: cover;
+    }
+
+    .profileCard h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .profileCard .profile-email {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+    }
+
+    .profileCard .profile-joined {
+      font-size: 10px;
+      color: var(--text-dim);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .profileCard .profile-joined svg {
+      width: 14px;
+      height: 14px;
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2;
+    }
+
+    .profileStats {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 16px 0 20px;
+    }
+    .stat {
+      padding: 14px 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      background: var(--bg-input);
+      transition: all .3s ease;
+    }
+    .stat:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(21,156,255,.1);
+    }
+    .stat b {
+      display: block;
+      font-size: 18px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+    .stat span {
+      font-size: 8px;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .profileLogout {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent), #0968c8);
+      color: white;
+      font-weight: 700;
+      font-size: 11px;
+      cursor: pointer;
+      transition: all .3s ease;
+      letter-spacing: 0.5px;
+    }
+    .profileLogout:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(21,156,255,.3);
+    }
+    .profileLogout:active { transform: scale(0.97); }
+    .profileLogout.logout-btn {
+      background: linear-gradient(135deg, #ff4757, #c0392b);
+    }
+    .profileLogout.logout-btn:hover {
+      box-shadow: 0 8px 25px rgba(255,71,87,.3);
+    }
+
+    /* ===== LOGIN OVERLAY ===== */
+    .loginOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(18px);
+      transition: background .3s;
+    }
+    .loginOverlay.active { display: flex; }
+
+    .login {
+      position: relative;
+      width: min(390px, 100%);
+      padding: 40px 30px 35px;
+      text-align: center;
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      background: var(--bg-login);
+      box-shadow: 0 30px 100px rgba(0,0,0,0.6), 0 0 70px rgba(0,130,255,.13);
+      animation: open .4s cubic-bezier(.2,.8,.2,1);
+      color: var(--text-primary);
+    }
+
+    .login .close {
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border-color);
+      border-radius: 50%;
+      background: var(--bg-input);
+      color: var(--text-secondary);
+      font-size: 18px;
+      cursor: pointer;
+      transition: all .3s ease;
+      display: grid;
+      place-items: center;
+    }
+    .login .close:hover {
+      background: #ff4757;
+      color: white;
+      transform: rotate(90deg) scale(1.1);
+      border-color: #ff4757;
+    }
+
+    .loginLogo {
+      width: 60px;
+      height: 60px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 18px;
+      border-radius: 16px;
+      background: linear-gradient(145deg, #29aaff, #0759a8);
+      box-shadow: 0 0 40px rgba(30,160,255,.25);
+    }
+    .loginLogo svg { width: 28px; fill: none; stroke: #fff; stroke-width: 2.2; }
+
+    .login h2 {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 6px;
+    }
+    .login p {
+      max-width: 290px;
+      margin: 8px auto 22px;
+      color: var(--text-secondary);
+      font-size: 12px;
+      line-height: 1.7;
+    }
+
+    #googleButton {
+      display: flex;
+      justify-content: center;
+      min-height: 44px;
+      margin: 5px 0;
+    }
+
+    .login small {
+      display: block;
+      margin-top: 18px;
+      color: var(--text-dim);
+      font-size: 9px;
+      letter-spacing: 0.3px;
+    }
+
+    .login .divider {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin: 18px 0;
+      color: var(--text-dim);
+      font-size: 9px;
+    }
+    .login .divider::before,
+    .login .divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    @keyframes open {
+      from { opacity: 0; transform: scale(.92) translateY(20px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* overlay lainnya */
+    .toolOverlay {
+      position: fixed; inset: 0; z-index: 9000;
+      display: none; align-items: center; justify-content: center; padding: 15px;
+      background: var(--bg-overlay);
+      backdrop-filter: blur(18px);
+      transition: background .3s;
+    }
+    .toolOverlay.active { display: flex; }
+
+    /* browser */
+    .browser {
+      width: min(720px, 100%);
+      height: min(570px, 90vh);
+      display: flex; flex-direction: column; overflow: hidden;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      background: var(--bg-browser);
+      box-shadow: 0 30px 110px #000, 0 0 70px rgba(0,130,255,.14);
+      animation: open .3s ease;
+      color: var(--text-primary);
+    }
+    .tabs {
+      height: 42px; display: flex; align-items: end; justify-content: space-between;
+      padding-left: 14px; background: var(--bg-tabs);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .tab {
+      height: 35px; width: 210px; padding: 5px 9px; display: flex; align-items: center; gap: 8px;
+      border-radius: 8px 8px 0 0; background: var(--bg-tab);
+    }
+    .tab svg { width: 14px; fill: var(--accent); }
+    .tab span { font-size: 10px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .tab button { margin-left: auto; border: 0; background: none; color: var(--text-secondary); font-size: 18px; cursor: pointer; }
+    .windows { display: flex; }
+    .windows button { width: 38px; height: 30px; border: 0; background: transparent; color: var(--text-secondary); cursor: pointer; }
+    .windows button:hover { background: var(--bg-tool-hover); color: var(--text-primary); }
+    .windows .x:hover { background: #ed3d4c; color: white; }
+
+    .browserHead {
+      height: 48px; display: flex; align-items: center; gap: 5px; padding: 7px 9px;
+      background: var(--bg-content);
+      border-bottom: 1px solid var(--border-color);
+    }
+    .nav {
+      width: 30px; height: 30px; border: 0; border-radius: 7px;
+      background: transparent; color: var(--text-secondary); cursor: pointer;
+    }
+    .nav:hover { background: var(--bg-tool-hover); color: var(--text-primary); }
+    .address { position: relative; flex: 1; }
+    .address input {
+      width: 100%; height: 32px; padding: 0 14px 0 34px;
+      border: 1px solid var(--border-color);
+      border-radius: 20px; outline: 0;
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 10px;
+    }
+    .address svg {
+      position: absolute; left: 12px; top: 9px;
+      width: 14px; height: 14px; fill: none; stroke: var(--accent); stroke-width: 2;
+    }
+    .content {
+      flex: 1; overflow: auto; padding: 27px;
+      background: var(--bg-content);
+    }
+    .content::-webkit-scrollbar { width: 5px; }
+    .content::-webkit-scrollbar-thumb { background: #145b89; border-radius: 20px; }
+
+    .toolTitle { display: flex; align-items: center; gap: 13px; margin-bottom: 20px; }
+    .toolBigIcon {
+      width: 46px; height: 46px; display: grid; place-items: center;
+      border-radius: 12px;
+      background: rgba(40,160,255,.1); border: 1px solid var(--border-color);
+    }
+    .toolBigIcon svg { width: 22px; fill: none; stroke: var(--accent); stroke-width: 2; }
+    .toolTitle h2 { font-size: 21px; color: var(--text-primary); }
+    .toolTitle p { margin-top: 3px; font-size: 9px; color: var(--text-secondary); }
+
+    .input, .textarea {
+      width: 100%; padding: 13px; margin-bottom: 9px;
+      border: 1px solid var(--border-color);
+      border-radius: 9px; outline: 0;
+      background: var(--bg-input);
+      color: var(--text-primary);
+      font-size: 11px;
+      transition: background .3s, border .3s, color .3s;
+    }
+    .textarea { min-height: 140px; resize: vertical; }
+    .input:focus, .textarea:focus { border-color: #299fff; box-shadow: 0 0 0 3px rgba(30,150,255,.08); }
+
+    .action {
+      width: 100%; min-height: 40px;
+      border: 1px solid rgba(100,195,255,.25);
+      border-radius: 9px;
+      background: linear-gradient(135deg, #299fff, #0968c8);
+      color: white;
+      font-weight: 700; font-size: 10px;
+      cursor: pointer;
+      transition: .25s;
+    }
+    .action:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(20,135,255,.25); }
+
+    .result {
+      min-height: 50px; padding: 14px; margin-top: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 9px;
+      background: var(--bg-result);
+      color: var(--text-primary);
+      font-size: 11px; white-space: pre-wrap; word-break: break-word;
+      transition: background .3s, border .3s, color .3s;
+    }
+    .bigResult { padding: 25px; text-align: center; font-size: 27px; font-weight: 700; }
+
+    /* responsive */
+    @media(max-width:900px){ .tools { grid-template-columns: repeat(3,1fr); } }
+    @media(max-width:700px){
+      .tools { grid-template-columns: repeat(2,1fr); }
+      .infoItem:nth-child(2), .infoItem:nth-child(3) { display: none; }
+      .search { width: 150px; }
+    }
+    @media(max-width:520px){
+      header { flex-wrap: wrap; }
+      .search { width: 100%; order: 10; }
+      .info { margin-left: auto; }
+      .tools { grid-template-columns: 1fr 1fr; }
+      .tool { min-height: 108px; padding: 13px; }
+      .hero { margin-top: 75px; }
+      .hero h1 { letter-spacing: -2px; }
+      .content { padding: 19px; }
+      .accountName { display: none; }
+      .profileStats { grid-template-columns: 1fr; }
+      .marqueeTrack .marquee-item { font-size: 40px; }
+    }
+  </style>
 </head>
 <body>
 
 <header>
-<div class="logo">
-<div class="logoIcon">
-<svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>
-</div>
-<b>Blue<span>Tools</span></b>
-</div>
+  <div class="logo">
+    <div class="logoIcon">
+      <svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>
+    </div>
+    <b>Blue<span>Tools</span></b>
+  </div>
 
-<div class="info">
-<div class="infoItem">
-<svg viewBox="0 0 24 24"><rect x="3" y="7" width="17" height="10" rx="2"/><path d="M21 10v4"/></svg>
-<span id="battery">--%</span>
-</div>
-<div class="infoItem">
-<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
-<span>ID</span>
-</div>
-<div class="infoItem">
-<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-<span id="clock">00:00:00</span>
-</div>
-</div>
+  <div class="info">
+    <div class="infoItem">
+      <svg viewBox="0 0 24 24"><rect x="3" y="7" width="17" height="10" rx="2"/><path d="M21 10v4"/></svg>
+      <span id="battery">--%</span>
+    </div>
+    <div class="infoItem">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg>
+      <span>ID</span>
+    </div>
+    <div class="infoItem">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <span id="clock">00:00:00</span>
+    </div>
+  </div>
 
-<div class="account" id="account">
-<img id="photo">
-<span class="accountName" id="accountName"></span>
-</div>
+  <div class="account" id="account">
+    <img id="photo">
+    <span class="accountName" id="accountName"></span>
+  </div>
 
-<input class="search" id="search" placeholder="Search tools..." oninput="searchTools()">
+  <input class="search" id="search" placeholder="Search tools..." oninput="searchTools()">
 
-<button class="profileBtn" onclick="openProfile()">
-<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 15-5 16 0"/></svg>
-</button>
+  <button class="profileBtn" onclick="openProfile()" id="profileBtn">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 15-5 16 0"/></svg>
+    <span class="badge-dot"></span>
+  </button>
 
-<button class="menuBtn" onclick="openMenu()">
-<svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
-</button>
+  <button class="menuBtn" onclick="openMenu()">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
 </header>
 
 <div class="menuShade" id="menuShade" onclick="closeMenu()"></div>
 
 <aside class="sideMenu" id="sideMenu">
-<div class="sideHead">
-<h2>Menu</h2>
-<button class="sideClose" onclick="closeMenu()">×</button>
-</div>
+  <div class="sideHead">
+    <h2>Menu</h2>
+    <button class="sideClose" onclick="closeMenu()">×</button>
+  </div>
 
-<button class="menuItem" onclick="scrollToTools()">
-<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-Semua Tools
-</button>
+  <button class="menuItem" onclick="scrollToTools()">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+    Semua Tools
+  </button>
 
-<button class="menuItem" onclick="openProfile()">
-<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 15-5 16 0"/></svg>
-Profile
-</button>
+  <button class="menuItem" onclick="openProfile()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-5 15-5 16 0"/></svg>
+    Profile
+  </button>
 
-<button class="menuItem" onclick="focusSearch()">
-<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
-Cari Tools
-</button>
+  <button class="menuItem" onclick="focusSearch()">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg>
+    Cari Tools
+  </button>
 
-<button class="menuItem" onclick="openCategory('Developer')">
-<svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
-Developer
-</button>
+  <button class="menuItem" onclick="openCategory('Developer')">
+    <svg viewBox="0 0 24 24"><path d="m8 9-4 3 4 3M16 9l4 3-4 3M14 5l-4 14"/></svg>
+    Developer
+  </button>
 
-<button class="menuItem" onclick="openCategory('Produktivitas')">
-<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>
-Produktivitas
-</button>
+  <button class="menuItem" onclick="openCategory('Produktivitas')">
+    <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5v14"/></svg>
+    Produktivitas
+  </button>
+
+  <button class="themeToggle" onclick="toggleTheme()">
+    <span class="toggleIcon">
+      <svg class="sun-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+      <svg class="moon-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+      </svg>
+    </span>
+    <span class="toggleLabel" id="themeLabel">Mode Terang</span>
+  </button>
+
+  <div class="animToggle" onclick="toggleAnimation()">
+    <label class="switch">
+      <input type="checkbox" id="animSwitch" checked>
+      <span class="slider"></span>
+    </label>
+    <span class="toggleLabel" id="animLabel">Animasi: ON</span>
+  </div>
 </aside>
 
 <section class="hero reveal">
-<div class="badge"><i></i> BLUE UTILITY SYSTEM</div>
-<h1>Everything you need.<br><span>In one place.</span></h1>
-<p>Tools sederhana untuk coding, produktivitas, teks, developer dan kebutuhan digital lainnya.</p>
+  <div class="badge"><i></i> BLUE UTILITY SYSTEM</div>
+  <h1>Everything you need.<br><span>In one place.</span></h1>
+  <p>Tools sederhana untuk coding, produktivitas, teks, developer dan kebutuhan digital lainnya.</p>
 </section>
 
+<!-- ===== MARQUEE - SLIDE LAMBAT, TANPA ICON, RAPAT ===== -->
 <div class="marquee">
-<div class="marqueeTrack">
-<span>CALCULATE • CODE • CONVERT • CREATE • CHECK • ORGANIZE •</span>
-<span>CALCULATE • CODE • CONVERT • CREATE • CHECK • ORGANIZE •</span>
-</div>
+  <div class="marqueeTrack">
+    <span class="marquee-item"><span class="text"> CALCULATE </span></span>
+    <span class="marquee-item"><span class="text"> CODE </span></span>
+    <span class="marquee-item"><span class="text"> CONVERT</span></span>
+    <span class="marquee-item"><span class="text">CREATE</span></span>
+    <span class="marquee-item"><span class="text"> CHECK</span></span>
+    <span class="marquee-item"><span class="text"> ORGANIZE</span></span>
+    <span class="marquee-item"><span class="text"> CALCULATE</span></span>
+    <span class="marquee-item"><span class="text"> CODE</span></span>
+    <span class="marquee-item"><span class="text"> CONVERT</span></span>
+    <span class="marquee-item"><span class="text"> CREATE</span></span>
+    <span class="marquee-item"><span class="text"> CHECK</span></span>
+    <span class="marquee-item"><span class="text"> ORGANIZE</span></span>
+  </div>
 </div>
 
 <main id="toolList"></main>
 <footer>BlueTools • Utility tools for everyday work.</footer>
 
-<div class="overlay" id="loginOverlay">
-<div class="login">
-<button class="close" onclick="closeLogin()">×</button>
-<div class="loginLogo"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg></div>
-<h2>Login Required</h2>
-<p>Silakan login dengan Google terlebih dahulu untuk menggunakan tools ini.</p>
-<div id="googleButton"></div>
-<small>Secure authentication with Google</small>
-</div>
+<!-- ===== LOGIN OVERLAY ===== -->
+<div class="loginOverlay" id="loginOverlay">
+  <div class="login">
+    <button class="close" onclick="closeLogin()">×</button>
+    <div class="loginLogo">
+      <svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>
+    </div>
+    <h2>Welcome Back</h2>
+    <p>Login dengan akun Google Anda untuk mengakses semua tools dan menyimpan progress.</p>
+    <div class="divider">ATAU</div>
+    <div id="googleButton"></div>
+    <small>🔒 Aman dengan autentikasi Google</small>
+  </div>
 </div>
 
+<!-- ===== PROFILE OVERLAY ===== -->
 <div class="profileOverlay" id="profileOverlay">
-<div class="profileCard">
-<button class="close" onclick="closeProfile()">×</button>
-<img class="profileAvatar" id="profileAvatar">
-<h2 id="profileName">Guest</h2>
-<div class="profileEmail" id="profileEmail">Belum login</div>
-<div class="profileStats">
-<div class="stat"><b id="toolCount">40+</b><span>TOOLS</span></div>
-<div class="stat"><b id="loginStatus">OFF</b><span>STATUS</span></div>
-</div>
-<button class="profileLogout" id="profileAction" onclick="profileAction()">Login dengan Google</button>
-</div>
+  <div class="profileCard">
+    <button class="close" onclick="closeProfile()">×</button>
+    <img class="profileAvatar" id="profileAvatar">
+    <h2 id="profileName">Guest</h2>
+    <div class="profile-email" id="profileEmail">Belum login</div>
+    <div class="profile-joined" id="profileJoined">
+      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      Bergabung: <span id="joinDate">--</span>
+    </div>
+    <div class="profileStats">
+      <div class="stat"><b id="toolCount">40+</b><span>Tools</span></div>
+      <div class="stat"><b id="loginStatus">OFF</b><span>Status</span></div>
+      <div class="stat"><b id="sessionTime">--</b><span>Sesi</span></div>
+    </div>
+    <button class="profileLogout" id="profileAction" onclick="profileAction()">Login dengan Google</button>
+  </div>
 </div>
 
+<!-- ===== TOOL OVERLAY ===== -->
 <div class="toolOverlay" id="toolOverlay">
-<div class="browser">
-<div class="tabs">
-<div class="tab">
-<svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>
-<span id="tabTitle">BlueTools</span>
-<button onclick="closeTool()">×</button>
-</div>
-<div class="windows">
-<button>−</button><button>□</button><button class="x" onclick="closeTool()">×</button>
-</div>
-</div>
+  <div class="browser">
+    <div class="tabs">
+      <div class="tab">
+        <svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>
+        <span id="tabTitle">BlueTools</span>
+        <button onclick="closeTool()">×</button>
+      </div>
+      <div class="windows">
+        <button>−</button><button>□</button><button class="x" onclick="closeTool()">×</button>
+      </div>
+    </div>
 
-<div class="browserHead">
-<button class="nav">←</button>
-<button class="nav">→</button>
-<div class="address">
-<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-<input id="popupSearch" placeholder="Search tools..." oninput="searchPopup()">
-</div>
-<button class="nav">⋮</button>
-</div>
+    <div class="browserHead">
+      <button class="nav">←</button>
+      <button class="nav">→</button>
+      <div class="address">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <input id="popupSearch" placeholder="Search tools..." oninput="searchPopup()">
+      </div>
+      <button class="nav">⋮</button>
+    </div>
 
-<div class="content">
-<div class="toolTitle">
-<div class="toolBigIcon"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg></div>
-<div><h2 id="popupName">Tool</h2><p id="popupDesc"></p></div>
-</div>
-<div id="toolBody"></div>
-</div>
-</div>
+    <div class="content">
+      <div class="toolTitle">
+        <div class="toolBigIcon"><svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg></div>
+        <div><h2 id="popupName">Tool</h2><p id="popupDesc"></p></div>
+      </div>
+      <div id="toolBody"></div>
+    </div>
+  </div>
 </div>
 
 <script>
-const GOOGLE_CLIENT_ID="1060030753845-li37pu6d85u833ui8b90jsrnv2vejfv4.apps.googleusercontent.com";
+  // ================== CONFIG ==================
+  const GOOGLE_CLIENT_ID = "1060030753845-li37pu6d85u833ui8b90jsrnv2vejfv4.apps.googleusercontent.com";
+  let loggedIn = localStorage.getItem("blue_logged") === "true";
+  let pendingTool = null;
+  let googleInitialized = false;
+  let sessionStart = Date.now();
 
-let loggedIn=localStorage.getItem("blue_logged")==="true";
-let pendingTool=null;
-let googleInitialized=false;
+  // ================== TOGGLE 1: TEMA ==================
+  function toggleTheme() {
+    document.body.classList.toggle('light');
+    const isLight = document.body.classList.contains('light');
+    document.getElementById('themeLabel').textContent = isLight ? 'Mode Gelap' : 'Mode Terang';
+    localStorage.setItem('blueTheme', isLight ? 'light' : 'dark');
+  }
 
-const tools=[
-["Produktivitas","Kalkulator","Hitung operasi matematika dengan cepat.","calculator"],
-["Produktivitas","Persentase","Hitung persentase dari sebuah nilai.","percent"],
-["Produktivitas","Diskon","Hitung harga setelah diskon.","discount"],
-["Produktivitas","Umur","Hitung umur berdasarkan tanggal lahir.","age"],
-["Produktivitas","Tanggal","Lihat tanggal hari ini.","date"],
-["Produktivitas","Countdown","Hitung mundur menuju waktu tertentu.","countdown"],
-["Produktivitas","Stopwatch","Pengukur waktu sederhana.","stopwatch"],
-["Produktivitas","Random Number","Generate angka random.","random"],
-["Produktivitas","Random Color","Generate warna HEX random.","randomcolor"],
-["Produktivitas","Timestamp","Lihat Unix timestamp.","timestamp"],
-["Teks","Word Counter","Hitung kata, karakter dan baris.","words"],
-["Teks","Case Converter","Ubah uppercase atau lowercase.","case"],
-["Teks","Text Reverse","Balik susunan karakter teks.","reverse"],
-["Teks","Remove Spaces","Bersihkan spasi berlebihan.","spaces"],
-["Teks","Line Counter","Hitung jumlah baris teks.","lines"],
-["Teks","Slug Generator","Buat slug URL dari teks.","slug"],
-["Teks","Text Sorter","Urutkan teks berdasarkan baris.","sort"],
-["Teks","Duplicate Remover","Hapus baris duplikat.","duplicate"],
-["Teks","Lorem Ipsum","Generate teks dummy.","lorem"],
-["Teks","Text Length","Hitung panjang teks.","length"],
-["Developer","JSON Formatter","Rapikan JSON agar mudah dibaca.","json"],
-["Developer","JSON Minifier","Minimalkan ukuran JSON.","jsonmini"],
-["Developer","Base64 Encoder","Encode teks menjadi Base64.","b64encode"],
-["Developer","Base64 Decoder","Decode Base64 menjadi teks.","b64decode"],
-["Developer","URL Encoder","Encode karakter URL.","urlencode"],
-["Developer","URL Decoder","Decode URL encoded text.","urldecode"],
-["Developer","UUID Generator","Generate UUID random.","uuid"],
-["Developer","Password Generator","Generate password random.","password"],
-["Developer","SHA-256","Generate SHA-256 hash.","hash"],
-["Developer","HTML Escape","Escape karakter HTML.","escape"],
-["Developer","HTML Preview","Preview kode HTML.","html"],
-["Developer","HEX → RGB","Konversi HEX menjadi RGB.","hex"],
-["Developer","Binary Converter","Konversi teks menjadi binary.","binary"],
-["Developer","Morse Converter","Konversi teks menjadi Morse.","morse"],
-["Developer","URL Parser","Analisis bagian URL.","urlparse"],
-["Developer","HTML Entity","Encode HTML entity.","entity"],
-["Utility","Aspect Ratio","Hitung rasio ukuran.","ratio"],
-["Utility","Color Picker","Pilih warna dari browser.","picker"],
-["Utility","IP Address","Lihat IP publik.","ip"],
-["Utility","User Agent","Lihat informasi browser.","ua"]
-].map(x=>({cat:x[0],name:x[1],desc:x[2],type:x[3]}));
+  // ================== TOGGLE 2: ANIMASI ==================
+  function toggleAnimation() {
+    const isOn = document.body.classList.toggle('anim-on');
+    document.getElementById('animSwitch').checked = isOn;
+    document.getElementById('animLabel').textContent = 'Animasi: ' + (isOn ? 'ON' : 'OFF');
+    localStorage.setItem('blueAnim', isOn ? 'on' : 'off');
+    
+    if (isOn) {
+      document.querySelectorAll('.tool').forEach(el => {
+        el.style.animation = 'none';
+        void el.offsetHeight;
+        el.style.animation = '';
+      });
+    }
+  }
 
-const icon=`<svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>`;
+  // Muat tema & animasi tersimpan
+  (function loadSettings() {
+    const savedTheme = localStorage.getItem('blueTheme');
+    if (savedTheme === 'light') {
+      document.body.classList.add('light');
+      document.getElementById('themeLabel').textContent = 'Mode Gelap';
+    } else {
+      document.body.classList.remove('light');
+      document.getElementById('themeLabel').textContent = 'Mode Terang';
+    }
+    
+    const savedAnim = localStorage.getItem('blueAnim');
+    if (savedAnim === 'off') {
+      document.body.classList.remove('anim-on');
+      document.getElementById('animSwitch').checked = false;
+      document.getElementById('animLabel').textContent = 'Animasi: OFF';
+    } else {
+      document.body.classList.add('anim-on');
+      document.getElementById('animSwitch').checked = true;
+      document.getElementById('animLabel').textContent = 'Animasi: ON';
+    }
+  })();
 
-function renderTools(){
-const groups={};
-tools.forEach(t=>(groups[t.cat]??=[]).push(t));
-const root=document.getElementById("toolList");
-root.innerHTML="";
-Object.entries(groups).forEach(([cat,list])=>{
-const section=document.createElement("section");
-section.className="category reveal";
-section.dataset.category=cat;
-section.innerHTML=`
-<div class="categoryHead">
-<div><h2>${cat}</h2><p>Tools ${cat.toLowerCase()}.</p></div>
-<span class="count">${list.length} TOOLS</span>
-</div>
-<div class="tools">${list.map(t=>`
-<button class="tool" data-search="${(t.name+" "+t.desc+" "+t.cat).toLowerCase()}" onclick="requestTool(${tools.indexOf(t)})">
-<div class="icon">${icon}</div>
-<h3>${t.name}</h3><p>${t.desc}</p>
-</button>`).join("")}</div>`;
-root.appendChild(section);
-});
-observeReveal();
-}
+  // ================== GOOGLE LOGIN ==================
+  function initGoogle() {
+    if (googleInitialized) return;
+    if (typeof google === "undefined") { setTimeout(initGoogle, 300); return; }
+    
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleLogin,
+      auto_select: false,
+      cancel_on_tap_outside: true
+    });
+    
+    google.accounts.id.renderButton(document.getElementById("googleButton"), {
+      theme: "filled_blue",
+      size: "large",
+      type: "standard",
+      text: "signin_with",
+      shape: "rectangular",
+      width: 280,
+      logo_alignment: "left"
+    });
+    
+    googleInitialized = true;
+  }
 
-function requestTool(i){
-const tool=tools[i];
-if(!loggedIn){pendingTool=tool;openLogin();return}
-openTool(tool);
-}
+  function handleGoogleLogin(response) {
+    const data = decodeJWT(response.credential);
+    if (!data) { 
+      alert("Login Google gagal. Silakan coba lagi."); 
+      return; 
+    }
+    
+    localStorage.setItem("blue_logged", "true");
+    localStorage.setItem("blue_name", data.name || "Google User");
+    localStorage.setItem("blue_email", data.email || "");
+    localStorage.setItem("blue_photo", data.picture || "");
+    localStorage.setItem("blue_joined", new Date().toISOString());
+    
+    loggedIn = true;
+    sessionStart = Date.now();
+    updateAccount();
+    closeLogin();
+    
+    if (pendingTool) { 
+      const t = pendingTool; 
+      pendingTool = null; 
+      openTool(t); 
+    }
+  }
 
-function openLogin(){
-document.getElementById("loginOverlay").classList.add("active");
-initGoogle();
-}
-function closeLogin(){
-document.getElementById("loginOverlay").classList.remove("active");
-}
-function initGoogle(){
-if(googleInitialized)return;
-if(typeof google==="undefined"){setTimeout(initGoogle,300);return}
-google.accounts.id.initialize({client_id:GOOGLE_CLIENT_ID,callback:googleLogin});
-google.accounts.id.renderButton(document.getElementById("googleButton"),{
-theme:"filled_blue",size:"large",type:"standard",text:"signin_with",shape:"rectangular",width:280
-});
-googleInitialized=true;
-}
-function googleLogin(response){
-const data=decodeJWT(response.credential);
-if(!data){alert("Login Google gagal.");return}
-localStorage.setItem("blue_logged","true");
-localStorage.setItem("blue_name",data.name||"Google User");
-localStorage.setItem("blue_email",data.email||"");
-localStorage.setItem("blue_photo",data.picture||"");
-loggedIn=true;
-updateAccount();
-closeLogin();
-if(pendingTool){const t=pendingTool;pendingTool=null;openTool(t)}
-}
-function decodeJWT(token){
-try{
-const p=token.split(".")[1].replace(/-/g,"+").replace(/_/g,"/");
-return JSON.parse(decodeURIComponent(atob(p).split("").map(c=>"%"+("00"+c.charCodeAt(0).toString(16)).slice(-2)).join("")));
-}catch{return null}
-}
-function updateAccount(){
-const account=document.getElementById("account");
-if(!loggedIn){account.classList.remove("show");return}
-document.getElementById("accountName").textContent=localStorage.getItem("blue_name")||"Google User";
-document.getElementById("photo").src=localStorage.getItem("blue_photo")||"";
-account.classList.add("show");
-}
-function logout(){
-localStorage.clear();
-loggedIn=false;
-if(window.google?.accounts?.id)google.accounts.id.disableAutoSelect();
-updateAccount();
-closeProfile();
-}
-function openProfile(){
-closeMenu();
-const o=document.getElementById("profileOverlay");
-o.classList.add("active");
-const photo=localStorage.getItem("blue_photo");
-document.getElementById("profileAvatar").src=photo||"https://www.gravatar.com/avatar/?d=mp";
-document.getElementById("profileName").textContent=localStorage.getItem("blue_name")||"Guest";
-document.getElementById("profileEmail").textContent=localStorage.getItem("blue_email")||"Belum login";
-document.getElementById("loginStatus").textContent=loggedIn?"ON":"OFF";
-document.getElementById("profileAction").textContent=loggedIn?"Logout":"Login dengan Google";
-}
-function closeProfile(){document.getElementById("profileOverlay").classList.remove("active")}
-function profileAction(){loggedIn?logout():openLogin()}
+  function decodeJWT(token) {
+    try {
+      const p = token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(decodeURIComponent(atob(p).split("").map(c => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2)).join("")));
+    } catch { return null; }
+  }
 
-function openMenu(){document.getElementById("sideMenu").classList.add("open");document.getElementById("menuShade").classList.add("show")}
-function closeMenu(){document.getElementById("sideMenu").classList.remove("open");document.getElementById("menuShade").classList.remove("show")}
-function scrollToTools(){closeMenu();document.getElementById("toolList").scrollIntoView({behavior:"smooth"})}
-function focusSearch(){closeMenu();document.getElementById("search").focus()}
-function openCategory(cat){
-closeMenu();
-const el=document.querySelector(`[data-category="${cat}"]`);
-if(el)el.scrollIntoView({behavior:"smooth"});
-}
+  // ================== LOGIN OVERLAY ==================
+  function openLogin() { 
+    document.getElementById("loginOverlay").classList.add("active"); 
+    initGoogle();
+  }
+  function closeLogin() { 
+    document.getElementById("loginOverlay").classList.remove("active"); 
+  }
 
-function searchTools(){
-const q=document.getElementById("search").value.toLowerCase().trim();
-document.querySelectorAll(".tool").forEach(x=>x.style.display=!q||x.dataset.search.includes(q)?"":"none");
-document.querySelectorAll(".category").forEach(c=>{
-c.style.display=[...c.querySelectorAll(".tool")].some(x=>x.style.display!=="none")?"":"none";
-});
-}
-function searchPopup(){
-const q=document.getElementById("popupSearch").value.toLowerCase().trim();
-if(!q)return;
-const f=tools.find(t=>(t.name+" "+t.desc).toLowerCase().includes(q));
-if(f){
-document.getElementById("popupName").textContent=f.name;
-document.getElementById("popupDesc").textContent=f.desc;
-renderTool(f.type);
-}
-}
+  // ================== PROFILE ==================
+  function updateAccount() {
+    const account = document.getElementById("account");
+    if (!loggedIn) { 
+      account.classList.remove("show"); 
+      return; 
+    }
+    document.getElementById("accountName").textContent = localStorage.getItem("blue_name") || "Google User";
+    document.getElementById("photo").src = localStorage.getItem("blue_photo") || "";
+    account.classList.add("show");
+  }
 
-function openTool(t){
-document.getElementById("toolOverlay").classList.add("active");
-document.getElementById("tabTitle").textContent=t.name+" • BlueTools";
-document.getElementById("popupName").textContent=t.name;
-document.getElementById("popupDesc").textContent=t.desc;
-document.getElementById("popupSearch").value=t.name;
-renderTool(t.type);
-}
-function closeTool(){document.getElementById("toolOverlay").classList.remove("active")}
-function val(id){return document.getElementById(id)?.value||""}
-function out(x){const e=document.getElementById("result");if(e)e.textContent=x}
+  function openProfile() {
+    closeMenu();
+    const o = document.getElementById("profileOverlay");
+    o.classList.add("active");
+    
+    const photo = localStorage.getItem("blue_photo");
+    const name = localStorage.getItem("blue_name") || "Guest";
+    const email = localStorage.getItem("blue_email") || "Belum login";
+    const joined = localStorage.getItem("blue_joined");
+    
+    document.getElementById("profileAvatar").src = photo || "https://www.gravatar.com/avatar/?d=mp";
+    document.getElementById("profileName").textContent = name;
+    document.getElementById("profileEmail").textContent = email;
+    document.getElementById("loginStatus").textContent = loggedIn ? "ON" : "OFF";
+    document.getElementById("profileAction").textContent = loggedIn ? "Logout" : "Login dengan Google";
+    document.getElementById("profileAction").className = "profileLogout" + (loggedIn ? " logout-btn" : "");
+    
+    if (joined) {
+      const d = new Date(joined);
+      document.getElementById("joinDate").textContent = d.toLocaleDateString("id-ID", { 
+        day: 'numeric', month: 'long', year: 'numeric' 
+      });
+    } else {
+      document.getElementById("joinDate").textContent = "Belum login";
+    }
+    
+    if (loggedIn) {
+      const elapsed = Math.floor((Date.now() - sessionStart) / 60000);
+      if (elapsed < 60) {
+        document.getElementById("sessionTime").textContent = elapsed + "m";
+      } else {
+        const h = Math.floor(elapsed / 60);
+        const m = elapsed % 60;
+        document.getElementById("sessionTime").textContent = h + "j " + m + "m";
+      }
+    } else {
+      document.getElementById("sessionTime").textContent = "--";
+    }
+    
+    document.getElementById("toolCount").textContent = tools.length + "+";
+  }
 
-const textArea=`<textarea id="input" class="textarea" placeholder="Masukkan teks..."></textarea>`;
+  function closeProfile() { 
+    document.getElementById("profileOverlay").classList.remove("active"); 
+  }
 
-function renderTool(type){
-let h="";
-switch(type){
-case"calculator":h=`<input id="input" class="input" placeholder="Contoh: (20 + 5) * 2"><button class="action" onclick="calculate()">Hitung</button><div class="result bigResult" id="result">0</div>`;break;
-case"percent":h=`<input id="a" class="input" placeholder="Nilai"><input id="b" class="input" placeholder="Total"><button class="action" onclick="percent()">Hitung</button><div class="result bigResult" id="result">0%</div>`;break;
-case"discount":h=`<input id="price" class="input" placeholder="Harga"><input id="disc" class="input" placeholder="Diskon %"><button class="action" onclick="discount()">Hitung</button><div class="result" id="result"></div>`;break;
-case"age":h=`<input id="birth" type="date" class="input"><button class="action" onclick="age()">Hitung Umur</button><div class="result bigResult" id="result"></div>`;break;
-case"date":h=`<div class="result bigResult">${new Date().toLocaleDateString("id-ID",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</div>`;break;
-case"countdown":h=`<input id="countDate" type="datetime-local" class="input"><button class="action" onclick="countdown()">Start</button><div class="result bigResult" id="result">00:00:00</div>`;break;
-case"stopwatch":h=`<div class="result bigResult" id="result">00:00:00</div><button class="action" onclick="startSW()">Start</button><br><br><button class="action" onclick="stopSW()">Stop</button><br><br><button class="action" onclick="resetSW()">Reset</button>`;break;
-case"words":h=`${textArea}<button class="action" onclick="words()">Analyze</button><div class="result" id="result"></div>`;break;
-case"case":h=`${textArea}<button class="action" onclick="out(val('input').toUpperCase())">UPPERCASE</button><br><br><button class="action" onclick="out(val('input').toLowerCase())">lowercase</button>`;break;
-case"reverse":h=`${textArea}<button class="action" onclick="out([...val('input')].reverse().join(''))">Reverse</button><div class="result" id="result"></div>`;break;
-case"spaces":h=`${textArea}<button class="action" onclick="out(val('input').replace(/\\s+/g,' ').trim())">Clean Spaces</button><div class="result" id="result"></div>`;break;
-case"lines":h=`${textArea}<button class="action" onclick="out(val('input')?val('input').split('\\n').length:0)">Count Lines</button><div class="result" id="result"></div>`;break;
-case"slug":h=`<input id="input" class="input" placeholder="Judul halaman"><button class="action" onclick="out(val('input').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))">Generate</button><div class="result" id="result"></div>`;break;
-case"sort":h=`${textArea}<button class="action" onclick="out(val('input').split('\\n').sort().join('\\n'))">Sort</button><div class="result" id="result"></div>`;break;
-case"duplicate":h=`${textArea}<button class="action" onclick="out([...new Set(val('input').split('\\n'))].join('\\n'))">Remove Duplicate</button><div class="result" id="result"></div>`;break;
-case"json":h=`${textArea}<button class="action" onclick="jsonFormat()">Format JSON</button><div class="result" id="result"></div>`;break;
-case"jsonmini":h=`${textArea}<button class="action" onclick="jsonMini()">Minify JSON</button><div class="result" id="result"></div>`;break;
-case"b64encode":h=`${textArea}<button class="action" onclick="out(btoa(unescape(encodeURIComponent(val('input')))))">Encode</button><div class="result" id="result"></div>`;break;
-case"b64decode":h=`${textArea}<button class="action" onclick="decode64()">Decode</button><div class="result" id="result"></div>`;break;
-case"urlencode":h=`${textArea}<button class="action" onclick="out(encodeURIComponent(val('input')))">Encode URL</button><div class="result" id="result"></div>`;break;
-case"urldecode":h=`${textArea}<button class="action" onclick="try{out(decodeURIComponent(val('input')))}catch{out('URL tidak valid')}">Decode URL</button><div class="result" id="result"></div>`;break;
-case"uuid":h=`<div class="result bigResult" id="result">${crypto.randomUUID()}</div><button class="action" onclick="out(crypto.randomUUID())">Generate UUID</button>`;break;
-case"password":h=`<div class="result bigResult" id="result"></div><button class="action" onclick="genPass()">Generate Password</button>`;break;
-case"hash":h=`${textArea}<button class="action" onclick="hash()">SHA-256</button><div class="result" id="result"></div>`;break;
-case"escape":h=`${textArea}<button class="action" onclick="out(val('input').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'))">Escape HTML</button><div class="result" id="result"></div>`;break;
-case"html":h=`${textArea}<button class="action" onclick="preview()">Preview HTML</button>`;break;
-case"hex":h=`<input id="input" class="input" placeholder="#159cff"><button class="action" onclick="hex()">Convert</button><div class="result" id="result"></div>`;break;
-case"binary":h=`${textArea}<button class="action" onclick="out([...val('input')].map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' '))">Convert</button><div class="result" id="result"></div>`;break;
-case"morse":h=`${textArea}<button class="action" onclick="morse()">Convert</button><div class="result" id="result"></div>`;break;
-case"urlparse":h=`<input id="input" class="input" placeholder="https://example.com/test?q=1"><button class="action" onclick="parse()">Analyze</button><div class="result" id="result"></div>`;break;
-case"entity":h=`${textArea}<button class="action" onclick="out(val('input').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'))">Encode</button><div class="result" id="result"></div>`;break;
-case"ratio":h=`<input id="width" class="input" placeholder="Width"><input id="height" class="input" placeholder="Height"><button class="action" onclick="ratio()">Calculate</button><div class="result" id="result"></div>`;break;
-case"picker":h=`<input id="picker" type="color" value="#159cff" style="width:100%;height:100px;margin-bottom:10px"><button class="action" onclick="out(document.getElementById('picker').value)">Get Color</button><div class="result" id="result"></div>`;break;
-case"ip":h=`<div class="result bigResult" id="result">Loading...</div><button class="action" onclick="getIP()">Refresh</button>`;setTimeout(getIP,50);break;
-case"ua":h=`<div class="result">${navigator.userAgent}</div>`;break;
-case"random":h=`<input id="input" class="input" placeholder="Maximum"><button class="action" onclick="out(Math.floor(Math.random()*(Number(val('input'))||100))+1)">Generate</button><div class="result bigResult" id="result"></div>`;break;
-case"randomcolor":h=`<div class="result bigResult" id="result">#159CFF</div><button class="action" onclick="out('#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0').toUpperCase())">Generate</button>`;break;
-case"timestamp":h=`<div class="result bigResult" id="result">${Math.floor(Date.now()/1000)}</div><button class="action" onclick="out(Math.floor(Date.now()/1000))">Refresh</button>`;break;
-case"lorem":h=`<input id="amount" class="input" placeholder="Jumlah paragraf"><button class="action" onclick="lorem()">Generate</button><div class="result" id="result"></div>`;break;
-case"length":h=`${textArea}<button class="action" onclick="out(val('input').length+' karakter')">Count</button><div class="result bigResult" id="result"></div>`;break;
-}
-document.getElementById("toolBody").innerHTML=h;
-if(type==="password")genPass();
-}
+  function profileAction() { 
+    if (loggedIn) {
+      logout();
+    } else {
+      closeProfile();
+      setTimeout(() => openLogin(), 200);
+    }
+  }
 
-function calculate(){try{out(Function('"use strict";return ('+val("input")+')')())}catch{out("Perhitungan tidak valid.")}}
-function percent(){let a=+val("a"),b=+val("b");out(b?((a/b)*100).toFixed(2)+"%":"Input tidak valid")}
-function discount(){let p=+val("price"),d=+val("disc");out(`Potongan: ${p*d/100}\nHarga akhir: ${p-p*d/100}`)}
-function age(){let d=new Date(val("birth"));if(isNaN(d)){out("Pilih tanggal");return}let n=new Date(),a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;out(a+" tahun")}
-let ct;
-function countdown(){clearInterval(ct);let t=new Date(val("countDate")).getTime();if(!t)return out("Pilih waktu");ct=setInterval(()=>{let d=t-Date.now();if(d<=0){clearInterval(ct);return out("SELESAI")}let s=Math.floor(d/1000);out(`${Math.floor(s/86400)}d ${Math.floor(s%86400/3600)}h ${Math.floor(s%3600/60)}m ${s%60}s`)},500)}
-let sw=null,swStart=0,swElapsed=0;
-function startSW(){if(sw)return;swStart=Date.now()-swElapsed;sw=setInterval(()=>{let s=Math.floor((Date.now()-swStart)/1000);out(`${String(Math.floor(s/3600)).padStart(2,"0")}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`)},200)}
-function stopSW(){clearInterval(sw);sw=null}
-function resetSW(){stopSW();swElapsed=0;out("00:00:00")}
-function words(){let t=val("input");out(`Words: ${t.trim()?t.trim().split(/\s+/).length:0}\nCharacters: ${t.length}\nLines: ${t?t.split("\n").length:0}`)}
-function jsonFormat(){try{out(JSON.stringify(JSON.parse(val("input")),null,2))}catch{out("JSON tidak valid.")}}
-function jsonMini(){try{out(JSON.stringify(JSON.parse(val("input"))))}catch{out("JSON tidak valid.")}}
-function decode64(){try{out(decodeURIComponent(escape(atob(val("input")))))}catch{out("Base64 tidak valid.")}}
-function genPass(){let c="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*",p="";for(let i=0;i<18;i++)p+=c[Math.floor(Math.random()*c.length)];out(p)}
-async function hash(){let h=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(val("input")));out([...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,"0")).join(""))}
-function preview(){let w=window.open();if(w){w.document.write(val("input"));w.document.close()}}
-function hex(){let x=val("input").replace("#","");if(x.length!==6)return out("HEX harus 6 digit");out(`rgb(${parseInt(x.slice(0,2),16)}, ${parseInt(x.slice(2,4),16)}, ${parseInt(x.slice(4,6),16)})`)}
-function ratio(){let a=+val("width"),b=+val("height");function g(x,y){return y?g(y,x%y):x}if(a&&b){let x=g(a,b);out(`${a/x}:${b/x}`)}else out("Input tidak valid")}
-function getIP(){fetch("https://api.ipify.org?format=json").then(r=>r.json()).then(x=>out(x.ip)).catch(()=>out("IP tidak tersedia"))}
-function parse(){try{let u=new URL(val("input"));out(`Protocol: ${u.protocol}\nHost: ${u.hostname}\nPort: ${u.port||"(default)"}\nPath: ${u.pathname}\nQuery: ${u.search||"(none)"}`)}catch{out("URL tidak valid")}}
-const mm={A:".-",B:"-...",C:"-.-.",D:"-..",E:".",F:"..-.",G:"--.",H:"....",I:"..",J:".---",K:"-.-",L:".-..",M:"--",N:"-.",O:"---",P:".--.",Q:"--.-",R:".-.",S:"...",T:"-",U:"..-",V:"...-",W:".--",X:"-..-",Y:"-.--",Z:"--..","0":"-----","1":".----","2":"..---","3":"...--","4":"....-","5":".....","6":"-....","7":"--...","8":"---..","9":"----."};
-function morse(){out(val("input").toUpperCase().split("").map(c=>c===" "?"/":mm[c]||"").join(" "))}
-function lorem(){let n=Math.min(+val("amount")||1,10),t="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";out(Array(n).fill(t).join("\n\n"))}
+  function logout() {
+    localStorage.clear();
+    loggedIn = false;
+    if (window.google?.accounts?.id) google.accounts.id.disableAutoSelect();
+    updateAccount();
+    closeProfile();
+  }
 
-const revealObserver=new IntersectionObserver(entries=>entries.forEach(e=>e.isIntersecting?e.target.classList.add("show"):e.target.classList.remove("show")),{threshold:.08});
-function observeReveal(){document.querySelectorAll(".reveal").forEach(x=>revealObserver.observe(x))}
+  // ================== TOOLS DATA ==================
+  const tools = [
+    ["Produktivitas","Kalkulator","Hitung operasi matematika dengan cepat.","calculator"],
+    ["Produktivitas","Persentase","Hitung persentase dari sebuah nilai.","percent"],
+    ["Produktivitas","Diskon","Hitung harga setelah diskon.","discount"],
+    ["Produktivitas","Umur","Hitung umur berdasarkan tanggal lahir.","age"],
+    ["Produktivitas","Tanggal","Lihat tanggal hari ini.","date"],
+    ["Produktivitas","Countdown","Hitung mundur menuju waktu tertentu.","countdown"],
+    ["Produktivitas","Stopwatch","Pengukur waktu sederhana.","stopwatch"],
+    ["Produktivitas","Random Number","Generate angka random.","random"],
+    ["Produktivitas","Random Color","Generate warna HEX random.","randomcolor"],
+    ["Produktivitas","Timestamp","Lihat Unix timestamp.","timestamp"],
+    ["Teks","Word Counter","Hitung kata, karakter dan baris.","words"],
+    ["Teks","Case Converter","Ubah uppercase atau lowercase.","case"],
+    ["Teks","Text Reverse","Balik susunan karakter teks.","reverse"],
+    ["Teks","Remove Spaces","Bersihkan spasi berlebihan.","spaces"],
+    ["Teks","Line Counter","Hitung jumlah baris teks.","lines"],
+    ["Teks","Slug Generator","Buat slug URL dari teks.","slug"],
+    ["Teks","Text Sorter","Urutkan teks berdasarkan baris.","sort"],
+    ["Teks","Duplicate Remover","Hapus baris duplikat.","duplicate"],
+    ["Teks","Lorem Ipsum","Generate teks dummy.","lorem"],
+    ["Teks","Text Length","Hitung panjang teks.","length"],
+    ["Developer","JSON Formatter","Rapikan JSON agar mudah dibaca.","json"],
+    ["Developer","JSON Minifier","Minimalkan ukuran JSON.","jsonmini"],
+    ["Developer","Base64 Encoder","Encode teks menjadi Base64.","b64encode"],
+    ["Developer","Base64 Decoder","Decode Base64 menjadi teks.","b64decode"],
+    ["Developer","URL Encoder","Encode karakter URL.","urlencode"],
+    ["Developer","URL Decoder","Decode URL encoded text.","urldecode"],
+    ["Developer","UUID Generator","Generate UUID random.","uuid"],
+    ["Developer","Password Generator","Generate password random.","password"],
+    ["Developer","SHA-256","Generate SHA-256 hash.","hash"],
+    ["Developer","HTML Escape","Escape karakter HTML.","escape"],
+    ["Developer","HTML Preview","Preview kode HTML.","html"],
+    ["Developer","HEX → RGB","Konversi HEX menjadi RGB.","hex"],
+    ["Developer","Binary Converter","Konversi teks menjadi binary.","binary"],
+    ["Developer","Morse Converter","Konversi teks menjadi Morse.","morse"],
+    ["Developer","URL Parser","Analisis bagian URL.","urlparse"],
+    ["Developer","HTML Entity","Encode HTML entity.","entity"],
+    ["Utility","Aspect Ratio","Hitung rasio ukuran.","ratio"],
+    ["Utility","Color Picker","Pilih warna dari browser.","picker"],
+    ["Utility","IP Address","Lihat IP publik.","ip"],
+    ["Utility","User Agent","Lihat informasi browser.","ua"]
+  ].map(x => ({ cat: x[0], name: x[1], desc: x[2], type: x[3] }));
 
-function clock(){document.getElementById("clock").textContent=new Date().toLocaleTimeString("id-ID")}
-setInterval(clock,1000);clock();
+  const icon = `<svg viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 11-14h-8z"/></svg>`;
 
-if(navigator.getBattery)navigator.getBattery().then(b=>{
-function update(){
-let p=Math.round(b.level*100),e=document.getElementById("battery");
-e.textContent=p+"%"+(b.charging?" ⚡":"");e.className=p>=80?"full":p>=35?"medium":"low";
-}
-b.addEventListener("levelchange",update);b.addEventListener("chargingchange",update);update();
-});
+  // ================== RENDER TOOLS ==================
+  function renderTools() {
+    const groups = {};
+    tools.forEach(t => { if (!groups[t.cat]) groups[t.cat] = []; groups[t.cat].push(t); });
+    const root = document.getElementById("toolList");
+    root.innerHTML = "";
+    Object.entries(groups).forEach(([cat, list]) => {
+      const section = document.createElement("section");
+      section.className = "category reveal";
+      section.dataset.category = cat;
+      section.innerHTML = `
+        <div class="categoryHead">
+          <div><h2>${cat}</h2><p>Tools ${cat.toLowerCase()}.</p></div>
+          <span class="count">${list.length} TOOLS</span>
+        </div>
+        <div class="tools">${list.map(t => `
+          <button class="tool" data-search="${(t.name+" "+t.desc+" "+t.cat).toLowerCase()}" onclick="requestTool(${tools.indexOf(t)})">
+            <div class="icon">${icon}</div>
+            <h3>${t.name}</h3><p>${t.desc}</p>
+          </button>`).join("")}</div>`;
+      root.appendChild(section);
+    });
+    observeReveal();
+  }
 
-document.addEventListener("keydown",e=>{
-if(e.key==="Escape"){closeTool();closeLogin();closeProfile();closeMenu()}
-});
-document.getElementById("toolOverlay").onclick=e=>{if(e.target.id==="toolOverlay")closeTool()};
-document.getElementById("loginOverlay").onclick=e=>{if(e.target.id==="loginOverlay")closeLogin()};
-document.getElementById("profileOverlay").onclick=e=>{if(e.target.id==="profileOverlay")closeProfile()};
+  function requestTool(i) {
+    const tool = tools[i];
+    if (!loggedIn) { 
+      pendingTool = tool; 
+      openLogin(); 
+      return; 
+    }
+    openTool(tool);
+  }
 
-renderTools();
-updateAccount();
+  // ================== TOOL FUNCTIONS ==================
+  function openTool(t) {
+    document.getElementById("toolOverlay").classList.add("active");
+    document.getElementById("tabTitle").textContent = t.name + " • BlueTools";
+    document.getElementById("popupName").textContent = t.name;
+    document.getElementById("popupDesc").textContent = t.desc;
+    document.getElementById("popupSearch").value = t.name;
+    renderTool(t.type);
+  }
+
+  function closeTool() { document.getElementById("toolOverlay").classList.remove("active"); }
+  function val(id) { return document.getElementById(id)?.value || ""; }
+  function out(x) { const e = document.getElementById("result"); if (e) e.textContent = x; }
+
+  const textArea = `<textarea id="input" class="textarea" placeholder="Masukkan teks..."></textarea>`;
+
+  function renderTool(type) {
+    let h = "";
+    switch (type) {
+      case "calculator": h = `<input id="input" class="input" placeholder="Contoh: (20 + 5) * 2"><button class="action" onclick="calculate()">Hitung</button><div class="result bigResult" id="result">0</div>`; break;
+      case "percent": h = `<input id="a" class="input" placeholder="Nilai"><input id="b" class="input" placeholder="Total"><button class="action" onclick="percent()">Hitung</button><div class="result bigResult" id="result">0%</div>`; break;
+      case "discount": h = `<input id="price" class="input" placeholder="Harga"><input id="disc" class="input" placeholder="Diskon %"><button class="action" onclick="discount()">Hitung</button><div class="result" id="result"></div>`; break;
+      case "age": h = `<input id="birth" type="date" class="input"><button class="action" onclick="age()">Hitung Umur</button><div class="result bigResult" id="result"></div>`; break;
+      case "date": h = `<div class="result bigResult">${new Date().toLocaleDateString("id-ID", { weekday: "long", day: "numeric", month: "long", year: "numeric" })}</div>`; break;
+      case "countdown": h = `<input id="countDate" type="datetime-local" class="input"><button class="action" onclick="countdown()">Start</button><div class="result bigResult" id="result">00:00:00</div>`; break;
+      case "stopwatch": h = `<div class="result bigResult" id="result">00:00:00</div><button class="action" onclick="startSW()">Start</button><br><br><button class="action" onclick="stopSW()">Stop</button><br><br><button class="action" onclick="resetSW()">Reset</button>`; break;
+      case "words": h = `${textArea}<button class="action" onclick="words()">Analyze</button><div class="result" id="result"></div>`; break;
+      case "case": h = `${textArea}<button class="action" onclick="out(val('input').toUpperCase())">UPPERCASE</button><br><br><button class="action" onclick="out(val('input').toLowerCase())">lowercase</button>`; break;
+      case "reverse": h = `${textArea}<button class="action" onclick="out([...val('input')].reverse().join(''))">Reverse</button><div class="result" id="result"></div>`; break;
+      case "spaces": h = `${textArea}<button class="action" onclick="out(val('input').replace(/\\s+/g,' ').trim())">Clean Spaces</button><div class="result" id="result"></div>`; break;
+      case "lines": h = `${textArea}<button class="action" onclick="out(val('input')?val('input').split('\\n').length:0)">Count Lines</button><div class="result" id="result"></div>`; break;
+      case "slug": h = `<input id="input" class="input" placeholder="Judul halaman"><button class="action" onclick="out(val('input').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,''))">Generate</button><div class="result" id="result"></div>`; break;
+      case "sort": h = `${textArea}<button class="action" onclick="out(val('input').split('\\n').sort().join('\\n'))">Sort</button><div class="result" id="result"></div>`; break;
+      case "duplicate": h = `${textArea}<button class="action" onclick="out([...new Set(val('input').split('\\n'))].join('\\n'))">Remove Duplicate</button><div class="result" id="result"></div>`; break;
+      case "json": h = `${textArea}<button class="action" onclick="jsonFormat()">Format JSON</button><div class="result" id="result"></div>`; break;
+      case "jsonmini": h = `${textArea}<button class="action" onclick="jsonMini()">Minify JSON</button><div class="result" id="result"></div>`; break;
+      case "b64encode": h = `${textArea}<button class="action" onclick="out(btoa(unescape(encodeURIComponent(val('input')))))">Encode</button><div class="result" id="result"></div>`; break;
+      case "b64decode": h = `${textArea}<button class="action" onclick="decode64()">Decode</button><div class="result" id="result"></div>`; break;
+      case "urlencode": h = `${textArea}<button class="action" onclick="out(encodeURIComponent(val('input')))">Encode URL</button><div class="result" id="result"></div>`; break;
+      case "urldecode": h = `${textArea}<button class="action" onclick="try{out(decodeURIComponent(val('input')))}catch{out('URL tidak valid')}">Decode URL</button><div class="result" id="result"></div>`; break;
+      case "uuid": h = `<div class="result bigResult" id="result">${crypto.randomUUID()}</div><button class="action" onclick="out(crypto.randomUUID())">Generate UUID</button>`; break;
+      case "password": h = `<div class="result bigResult" id="result"></div><button class="action" onclick="genPass()">Generate Password</button>`; break;
+      case "hash": h = `${textArea}<button class="action" onclick="hash()">SHA-256</button><div class="result" id="result"></div>`; break;
+      case "escape": h = `${textArea}<button class="action" onclick="out(val('input').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;'))">Escape HTML</button><div class="result" id="result"></div>`; break;
+      case "html": h = `${textArea}<button class="action" onclick="preview()">Preview HTML</button>`; break;
+      case "hex": h = `<input id="input" class="input" placeholder="#159cff"><button class="action" onclick="hex()">Convert</button><div class="result" id="result"></div>`; break;
+      case "binary": h = `${textArea}<button class="action" onclick="out([...val('input')].map(c=>c.charCodeAt(0).toString(2).padStart(8,'0')).join(' '))">Convert</button><div class="result" id="result"></div>`; break;
+      case "morse": h = `${textArea}<button class="action" onclick="morse()">Convert</button><div class="result" id="result"></div>`; break;
+      case "urlparse": h = `<input id="input" class="input" placeholder="https://example.com/test?q=1"><button class="action" onclick="parse()">Analyze</button><div class="result" id="result"></div>`; break;
+      case "entity": h = `${textArea}<button class="action" onclick="out(val('input').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'))">Encode</button><div class="result" id="result"></div>`; break;
+      case "ratio": h = `<input id="width" class="input" placeholder="Width"><input id="height" class="input" placeholder="Height"><button class="action" onclick="ratio()">Calculate</button><div class="result" id="result"></div>`; break;
+      case "picker": h = `<input id="picker" type="color" value="#159cff" style="width:100%;height:100px;margin-bottom:10px"><button class="action" onclick="out(document.getElementById('picker').value)">Get Color</button><div class="result" id="result"></div>`; break;
+      case "ip": h = `<div class="result bigResult" id="result">Loading...</div><button class="action" onclick="getIP()">Refresh</button>`; setTimeout(getIP, 50); break;
+      case "ua": h = `<div class="result">${navigator.userAgent}</div>`; break;
+      case "random": h = `<input id="input" class="input" placeholder="Maximum"><button class="action" onclick="out(Math.floor(Math.random()*(Number(val('input'))||100))+1)">Generate</button><div class="result bigResult" id="result"></div>`; break;
+      case "randomcolor": h = `<div class="result bigResult" id="result">#159CFF</div><button class="action" onclick="out('#'+Math.floor(Math.random()*16777215).toString(16).padStart(6,'0').toUpperCase())">Generate</button>`; break;
+      case "timestamp": h = `<div class="result bigResult" id="result">${Math.floor(Date.now()/1000)}</div><button class="action" onclick="out(Math.floor(Date.now()/1000))">Refresh</button>`; break;
+      case "lorem": h = `<input id="amount" class="input" placeholder="Jumlah paragraf"><button class="action" onclick="lorem()">Generate</button><div class="result" id="result"></div>`; break;
+      case "length": h = `${textArea}<button class="action" onclick="out(val('input').length+' karakter')">Count</button><div class="result bigResult" id="result"></div>`; break;
+    }
+    document.getElementById("toolBody").innerHTML = h;
+    if (type === "password") genPass();
+  }
+
+  function calculate() { try { out(Function('"use strict";return (' + val("input") + ')')()); } catch { out("Perhitungan tidak valid."); } }
+  function percent() { let a = +val("a"), b = +val("b"); out(b ? ((a / b) * 100).toFixed(2) + "%" : "Input tidak valid"); }
+  function discount() { let p = +val("price"), d = +val("disc"); out(`Potongan: ${p*d/100}\nHarga akhir: ${p-p*d/100}`); }
+  function age() { let d = new Date(val("birth")); if (isNaN(d)) { out("Pilih tanggal"); return; } let n = new Date(), a = n.getFullYear() - d.getFullYear(); if (n.getMonth() < d.getMonth() || (n.getMonth() === d.getMonth() && n.getDate() < d.getDate())) a--; out(a + " tahun"); }
+  let ct;
+  function countdown() { clearInterval(ct); let t = new Date(val("countDate")).getTime(); if (!t) return out("Pilih waktu"); ct = setInterval(() => { let d = t - Date.now(); if (d <= 0) { clearInterval(ct); return out("SELESAI"); } let s = Math.floor(d / 1000); out(`${Math.floor(s/86400)}d ${Math.floor(s%86400/3600)}h ${Math.floor(s%3600/60)}m ${s%60}s`); }, 500); }
+  let sw = null, swStart = 0, swElapsed = 0;
+  function startSW() { if (sw) return; swStart = Date.now() - swElapsed; sw = setInterval(() => { let s = Math.floor((Date.now() - swStart) / 1000); out(`${String(Math.floor(s/3600)).padStart(2,"0")}:${String(Math.floor(s%3600/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`); }, 200); }
+  function stopSW() { clearInterval(sw); sw = null; }
+  function resetSW() { stopSW(); swElapsed = 0; out("00:00:00"); }
+  function words() { let t = val("input"); out(`Words: ${t.trim()?t.trim().split(/\s+/).length:0}\nCharacters: ${t.length}\nLines: ${t?t.split("\n").length:0}`); }
+  function jsonFormat() { try { out(JSON.stringify(JSON.parse(val("input")), null, 2)); } catch { out("JSON tidak valid."); } }
+  function jsonMini() { try { out(JSON.stringify(JSON.parse(val("input")))); } catch { out("JSON tidak valid."); } }
+  function decode64() { try { out(decodeURIComponent(escape(atob(val("input"))))); } catch { out("Base64 tidak valid."); } }
+  function genPass() { let c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*", p = ""; for (let i = 0; i < 18; i++) p += c[Math.floor(Math.random() * c.length)]; out(p); }
+  async function hash() { let h = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(val("input"))); out([...new Uint8Array(h)].map(x => x.toString(16).padStart(2, "0")).join("")); }
+  function preview() { let w = window.open(); if (w) { w.document.write(val("input")); w.document.close(); } }
+  function hex() { let x = val("input").replace("#", ""); if (x.length !== 6) return out("HEX harus 6 digit"); out(`rgb(${parseInt(x.slice(0,2),16)}, ${parseInt(x.slice(2,4),16)}, ${parseInt(x.slice(4,6),16)})`); }
+  function ratio() { let a = +val("width"), b = +val("height"); function g(x, y) { return y ? g(y, x % y) : x; } if (a && b) { let x = g(a, b); out(`${a/x}:${b/x}`); } else out("Input tidak valid"); }
+  function getIP() { fetch("https://api.ipify.org?format=json").then(r => r.json()).then(x => out(x.ip)).catch(() => out("IP tidak tersedia")); }
+  function parse() { try { let u = new URL(val("input")); out(`Protocol: ${u.protocol}\nHost: ${u.hostname}\nPort: ${u.port||"(default)"}\nPath: ${u.pathname}\nQuery: ${u.search||"(none)"}`); } catch { out("URL tidak valid"); } }
+  const mm = { A: ".-", B: "-...", C: "-.-.", D: "-..", E: ".", F: "..-.", G: "--.", H: "....", I: "..", J: ".---", K: "-.-", L: ".-..", M: "--", N: "-.", O: "---", P: ".--.", Q: "--.-", R: ".-.", S: "...", T: "-", U: "..-", V: "...-", W: ".--", X: "-..-", Y: "-.--", Z: "--..", "0": "-----", "1": ".----", "2": "..---", "3": "...--", "4": "....-", "5": ".....", "6": "-....", "7": "--...", "8": "---..", "9": "----." };
+  function morse() { out(val("input").toUpperCase().split("").map(c => c === " " ? "/" : mm[c] || "").join(" ")); }
+  function lorem() { let n = Math.min(+val("amount") || 1, 10), t = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."; out(Array(n).fill(t).join("\n\n")); }
+
+  // ================== SEARCH & NAV ==================
+  function searchTools() {
+    const q = document.getElementById("search").value.toLowerCase().trim();
+    document.querySelectorAll(".tool").forEach(x => x.style.display = !q || x.dataset.search.includes(q) ? "" : "none");
+    document.querySelectorAll(".category").forEach(c => {
+      c.style.display = [...c.querySelectorAll(".tool")].some(x => x.style.display !== "none") ? "" : "none";
+    });
+  }
+
+  function searchPopup() {
+    const q = document.getElementById("popupSearch").value.toLowerCase().trim();
+    if (!q) return;
+    const f = tools.find(t => (t.name + " " + t.desc).toLowerCase().includes(q));
+    if (f) {
+      document.getElementById("popupName").textContent = f.name;
+      document.getElementById("popupDesc").textContent = f.desc;
+      renderTool(f.type);
+    }
+  }
+
+  function openMenu() { document.getElementById("sideMenu").classList.add("open"); document.getElementById("menuShade").classList.add("show"); }
+  function closeMenu() { document.getElementById("sideMenu").classList.remove("open"); document.getElementById("menuShade").classList.remove("show"); }
+  function scrollToTools() { closeMenu(); document.getElementById("toolList").scrollIntoView({ behavior: "smooth" }); }
+  function focusSearch() { closeMenu(); document.getElementById("search").focus(); }
+  function openCategory(cat) {
+    closeMenu();
+    const el = document.querySelector(`[data-category="${cat}"]`);
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  }
+
+  // ================== OBSERVER ==================
+  const revealObserver = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting ? e.target.classList.add("show") : e.target.classList.remove("show")), { threshold: .08 });
+  function observeReveal() { document.querySelectorAll(".reveal").forEach(x => revealObserver.observe(x)); }
+
+  // ================== CLOCK & BATTERY ==================
+  function clock() { document.getElementById("clock").textContent = new Date().toLocaleTimeString("id-ID"); }
+  setInterval(clock, 1000); clock();
+
+  if (navigator.getBattery) navigator.getBattery().then(b => {
+    function update() {
+      let p = Math.round(b.level * 100), e = document.getElementById("battery");
+      e.textContent = p + "%" + (b.charging ? " ⚡" : ""); e.className = p >= 80 ? "full" : p >= 35 ? "medium" : "low";
+    }
+    b.addEventListener("levelchange", update); b.addEventListener("chargingchange", update); update();
+  });
+
+  // ================== KEYBOARD SHORTCUTS ==================
+  document.addEventListener("keydown", e => {
+    if (e.key === "Escape") { closeTool(); closeLogin(); closeProfile(); closeMenu(); }
+  });
+  document.getElementById("toolOverlay").onclick = e => { if (e.target.id === "toolOverlay") closeTool(); };
+  document.getElementById("loginOverlay").onclick = e => { if (e.target.id === "loginOverlay") closeLogin(); };
+  document.getElementById("profileOverlay").onclick = e => { if (e.target.id === "profileOverlay") closeProfile(); };
+
+  // ================== INIT ==================
+  renderTools();
+  updateAccount();
 </script>
 </body>
 </html>
